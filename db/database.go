@@ -2,8 +2,8 @@ package db
 
 import (
 	"context"
-	"github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type DB struct {
@@ -13,7 +13,7 @@ type DB struct {
 type TxFunc func(tx pgx.Tx) error
 
 func NewDB(connString string) (*DB, error) {
-	pool, err := pgxpool.Connect(context.Background(), connString)
+	pool, err := pgxpool.New(context.Background(), connString)
 	if err != nil {
 		return nil, err
 	}
