@@ -8,4 +8,5 @@ init:
 
 .PHONY: proto
 proto:
-	@protoc --proto_path=. --micro_out=. --go_out=:. proto/post-service.proto
+	@protoc --proto_path=./proto/post --micro_out=./proto/post --micro_opt=paths=source_relative --go_out=:./proto/post --go_opt=paths=source_relative  proto/post/*.proto
+	@protoc --proto_path=./proto/health --micro_out=./proto/health --micro_opt=paths=source_relative --go_out=:./proto/health --go_opt=paths=source_relative  proto/health/*.proto
