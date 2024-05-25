@@ -220,89 +220,89 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	UserService_GetAuthor_FullMethodName = "/serveralpha.UserService/GetAuthor"
+	ProfileService_GetProfile_FullMethodName = "/serveralpha.ProfileService/GetProfile"
 )
 
-// UserServiceClient is the client API for UserService service.
+// ProfileServiceClient is the client API for ProfileService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserServiceClient interface {
-	GetAuthor(ctx context.Context, in *GetAuthorRequest, opts ...grpc.CallOption) (*Author, error)
+type ProfileServiceClient interface {
+	GetProfile(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error)
 }
 
-type userServiceClient struct {
+type profileServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
-	return &userServiceClient{cc}
+func NewProfileServiceClient(cc grpc.ClientConnInterface) ProfileServiceClient {
+	return &profileServiceClient{cc}
 }
 
-func (c *userServiceClient) GetAuthor(ctx context.Context, in *GetAuthorRequest, opts ...grpc.CallOption) (*Author, error) {
-	out := new(Author)
-	err := c.cc.Invoke(ctx, UserService_GetAuthor_FullMethodName, in, out, opts...)
+func (c *profileServiceClient) GetProfile(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error) {
+	out := new(Profile)
+	err := c.cc.Invoke(ctx, ProfileService_GetProfile_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UserServiceServer is the server API for UserService service.
-// All implementations must embed UnimplementedUserServiceServer
+// ProfileServiceServer is the server API for ProfileService service.
+// All implementations must embed UnimplementedProfileServiceServer
 // for forward compatibility
-type UserServiceServer interface {
-	GetAuthor(context.Context, *GetAuthorRequest) (*Author, error)
-	mustEmbedUnimplementedUserServiceServer()
+type ProfileServiceServer interface {
+	GetProfile(context.Context, *Empty) (*Profile, error)
+	mustEmbedUnimplementedProfileServiceServer()
 }
 
-// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedUserServiceServer struct {
+// UnimplementedProfileServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedProfileServiceServer struct {
 }
 
-func (UnimplementedUserServiceServer) GetAuthor(context.Context, *GetAuthorRequest) (*Author, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAuthor not implemented")
+func (UnimplementedProfileServiceServer) GetProfile(context.Context, *Empty) (*Profile, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
 }
-func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
+func (UnimplementedProfileServiceServer) mustEmbedUnimplementedProfileServiceServer() {}
 
-// UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserServiceServer will
+// UnsafeProfileServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProfileServiceServer will
 // result in compilation errors.
-type UnsafeUserServiceServer interface {
-	mustEmbedUnimplementedUserServiceServer()
+type UnsafeProfileServiceServer interface {
+	mustEmbedUnimplementedProfileServiceServer()
 }
 
-func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
-	s.RegisterService(&UserService_ServiceDesc, srv)
+func RegisterProfileServiceServer(s grpc.ServiceRegistrar, srv ProfileServiceServer) {
+	s.RegisterService(&ProfileService_ServiceDesc, srv)
 }
 
-func _UserService_GetAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAuthorRequest)
+func _ProfileService_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetAuthor(ctx, in)
+		return srv.(ProfileServiceServer).GetProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_GetAuthor_FullMethodName,
+		FullMethod: ProfileService_GetProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetAuthor(ctx, req.(*GetAuthorRequest))
+		return srv.(ProfileServiceServer).GetProfile(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
+// ProfileService_ServiceDesc is the grpc.ServiceDesc for ProfileService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.UserService",
-	HandlerType: (*UserServiceServer)(nil),
+var ProfileService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "serveralpha.ProfileService",
+	HandlerType: (*ProfileServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetAuthor",
-			Handler:    _UserService_GetAuthor_Handler,
+			MethodName: "GetProfile",
+			Handler:    _ProfileService_GetProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

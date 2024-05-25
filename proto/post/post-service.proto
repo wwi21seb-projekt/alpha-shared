@@ -12,15 +12,16 @@ message Location{
   int32 accuracy = 3;
 }
 
-message Author{
+message Profile{
   string username = 1;
   string nickname = 2;
-  string profilePictureURL = 3;
+  string email = 3;
+  string profile_picture_url = 4;
 }
 
 message Post{
   string postId = 1;
-  Author author = 2;
+  Profile author = 2;
   string creationDate = 3;
   string content = 4;
   uint32 likes = 5;
@@ -72,10 +73,6 @@ message GetFeedRequest{
 
 // ------------------ User Service ------------------ //
 
-service UserService{
-  rpc GetAuthor(GetAuthorRequest) returns (Author);
-}
-
-message GetAuthorRequest{
-  string user_id = 1;
+service ProfileService{
+  rpc GetProfile(Empty) returns (Profile);
 }

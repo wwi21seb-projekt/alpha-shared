@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package serveralpha;
+
+option go_package = "./proto;serveralpha";
+
+// ------------------ Services ------------------ //
+
+service AuthenticationService{
+  rpc Register(RegisterRequest) returns (Profile);
+  rpc Activate(ActivateRequest) returns (Empty);
+  rpc Login(LoginRequest) returns (Empty);
+}
+
+service ProfileService{
+  rpc GetProfile(Empty) returns (Profile);
+  rpc SearchProfiles(SearchProfilesRequest) returns (PaginatedProfiles);
+  rpc GetFeed(GetFeedRequest) returns (PaginatedPosts);
+  rpc ChangeTrivialInfo(ChangeTrivialInfoRequest) returns (TrivialInfo);
+  rpc ChangePassword(ChangePasswordRequest) returns (Empty);
+}
+
+service SubscriptionService{
+  rpc GetSubscriptions(GetSubscriptionsRequest) returns (Subscriptions);
+  rpc Subscribe(SubscribeRequest) returns (Subscription);
+  rpc Unsubscribe(UnsubscribeRequest) returns (Empty);
+}
+
+// ------------------ Enums ------------------ //
+
+enum SubscriptionType{
+  FOLLOWER = 0; // default by setting to 0
+  FOLLOWING = 1;
+}
+
+// ------------------ Messages ------------------ //
+
+message Empty{}
+
+message Pagination{
+  int32 offset = 1;
+  int32 limit = 2;
+  int32 records = 3;
+}
+
+message Location{
+  float latitude = 1;
+  float longitude = 2;
+  int32 accuracy = 3;
+}
+
+message Profile{
+  string username = 1;
+  string nickname = 2;
+  string email = 3;
+  string profile_picture_url = 4;
+}
+
+message PaginatedProfiles{
+  repeated Profile profiles = 1;
+  Pagination pagination = 2;
+}
+
+message Post{
+  string post_id = 1;
+  Profile author = 2;
+  string created_at = 3;
+  string content = 4;
+  Location location = 5;
+}
+
+message PaginatedPosts{
+  repeated Post posts = 1;
+  Pagination pagination = 2;
+}
+
+message TrivialInfo{
+  string nickname = 1;
+  string status = 2;
+}
+
+message Subscription{
+  string subscription_id = 1;
+  string subscription_date = 2;
+  string followed_username = 3;
+  string follower_username = 4;
+}
+
+message DetailedSubscription{
+  string follower_subscription_id = 1; // populated when the other user follows the current user
+  string followed_subscription_id = 2; // populated when the current user follows the other user
+  string username = 3; // the username of the other user
+  string nickname = 4; // the nickname of the other user
+  string profile_picture_url = 5; // the profile picture of the other user
+}
+
+message Subscriptions{
+  repeated DetailedSubscription subscriptions = 1;
+  Pagination pagination = 2;
+}
+
+// ------------------ Requests ------------------ //
+
+message PaginationRequest{
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+message RegisterRequest{
+  string username = 1;
+  string password = 2;
+  string nickname = 3;
+  string email = 4;
+}
+
+message ActivateRequest{
+  string token = 1;
+}
+
+message LoginRequest{
+  string username = 1;
+  string password = 2;
+}
+
+message SearchProfilesRequest{
+  PaginationRequest pagination = 1;
+  string query = 2;
+}
+
+message GetFeedRequest{
+  PaginationRequest pagination = 1;
+  string username = 2;
+}
+
+message ChangeTrivialInfoRequest{
+  string nickname = 1;
+  string status = 2;
+}
+
+message ChangePasswordRequest{
+  string old_password = 1;
+  string new_password = 2;
+}
+
+message GetSubscriptionsRequest{
+  PaginationRequest pagination = 1;
+  SubscriptionType subscription_type = 2;
+  string username = 3;
+}
+
+message SubscribeRequest{
+  string followedUsername = 1;
+}
+
+message UnsubscribeRequest{
+  string subscription_id = 1;
+}
