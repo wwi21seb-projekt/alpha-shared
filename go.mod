@@ -4,6 +4,7 @@ go 1.22.3
 
 require (
 	github.com/jackc/pgx/v5 v5.6.0
+	github.com/sirupsen/logrus v1.9.3
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1
 )
@@ -18,7 +19,7 @@ require (
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
-	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240509183442-62759503f434 // indirect
 )
 
 replace google.golang.org/genproto => google.golang.org/genproto v0.0.0-20240515191416-fc5f0ca64291

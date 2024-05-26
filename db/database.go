@@ -2,8 +2,11 @@ package db
 
 import (
 	"context"
+	"errors"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type DB struct {
@@ -25,24 +28,30 @@ func (db *DB) Close() {
 	db.Pool.Close()
 }
 
-func (db *DB) Transaction(ctx context.Context, fn TxFunc) error {
-	// Begin a transaction
-	tx, err := db.Pool.Begin(ctx)
-	if err != nil {
-		return err
+// ----------------- Transaction Functions -----------------
+
+// Begin starts a new transaction and returns a transaction object
+func (db *DB) Begin(ctx context.Context) (pgx.Tx, error) {
+	log.Info("Beginning new transaction...")
+	return db.Pool.Begin(ctx)
+}
+
+// Commit commits the transaction
+func (db *DB) Commit(ctx context.Context, tx pgx.Tx) error {
+	log.Info("Committing transaction...")
+	return tx.Commit(ctx)
+}
+
+// Rollback rolls back the transaction
+func (db *DB) Rollback(ctx context.Context, tx pgx.Tx) error {
+	log.Info("Rolling back transaction...")
+	err := tx.Rollback(ctx)
+
+	// Ignore the error if the transaction was already committed
+
+	if err != nil && errors.Is(err, pgx.ErrTxClosed) {
+		return nil
 	}
 
-	defer func() {
-		if p := recover(); p != nil {
-			_ = tx.Rollback(ctx) // recover from panic and rollback if necessary
-			panic(p)             // re-throw panic after Rollback
-		} else if err != nil {
-			_ = tx.Rollback(ctx) // rollback if there was an error
-		} else {
-			err = tx.Commit(ctx) // commit if there was no error
-		}
-	}()
-
-	err = fn(tx) // call the transaction function supplied by the caller
 	return err
 }
