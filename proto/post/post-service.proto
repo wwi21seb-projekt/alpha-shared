@@ -45,9 +45,9 @@ service PostService{
 }
 
 service FeedService{
-  rpc GetGlobalFeed(GetFeedRequest) returns (SearchPostsResponse);  // Global, User, Personal
-  rpc GetUserFeed(GetFeedRequest) returns (SearchPostsResponse);    //
+  rpc GetGlobalFeed(GetFeedRequest) returns (SearchPostsResponse);
   rpc GetPersonalFeed(GetFeedRequest) returns (SearchPostsResponse);
+  rpc GetUserFeed(GetUserFeedRequest) returns (SearchPostsResponse);
 }
 
 service InteractionService{
@@ -87,8 +87,11 @@ message GetPostRequest{
 message GetFeedRequest{
   string last_post_id = 1;
   int32 limit = 2;
-  bool is_authenticated = 3;
-  user.User author = 4;
+}
+
+message GetUserFeedRequest{
+  common.PaginationRequest pagination = 1;
+  string user_id = 2;
 }
 
 message LikePostRequest{
@@ -105,7 +108,8 @@ message CreateCommentRequest{
 }
 
 message ListCommentsRequest{
-  string post_id = 1;
+  common.PaginationRequest pagination = 1;
+  string post_id = 2;
 }
 
 message ListCommentsResponse{

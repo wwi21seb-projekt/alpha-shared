@@ -20,7 +20,6 @@ service AuthenticationService{ // https://cloud.google.com/apis/design/naming_co
   rpc ActivateUser(ActivateUserRequest) returns (User);
   rpc LoginUser(LoginUserRequest) returns (User);
   rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
-  rpc ResendActivationToken(GetUserRequest) returns (common.Empty);
 }
 
 service UserService{
@@ -39,18 +38,11 @@ service SubscriptionService{
 // ------------------ Enums ------------------ //
 
 enum SubscriptionType{
-  SUBSCRIPTION_TYPE_UNSPECIFIED = 0; // default by setting to 0
-  SUBSCRIPTION_TYPE_FOLLOWER = 1;
-  SUBSCRIPTION_TYPE_FOLLOWING = 2;
+  SUBSCRIPTION_TYPE_FOLLOWER = 0; // default by setting to 0
+  SUBSCRIPTION_TYPE_FOLLOWING = 1;
 }
 
 // ------------------ Messages ------------------ //
-
-message Location{
-  float latitude = 1;
-  float longitude = 2;
-  int32 accuracy = 3;
-}
 
 message User{
   string username = 1;
@@ -59,14 +51,13 @@ message User{
   string profile_picture_url = 4;
 }
 
-message ListUsersResponse{
+message SearchUsersResponse{
   repeated User profiles = 1;
-  serveralpha.common.Pagination pagination = 2;
+  common.Pagination pagination = 2;
 }
 
-message TrivialInfo{
-  string nickname = 1;
-  string status = 2;
+message ListUsersResponse{
+  repeated User profiles = 1;
 }
 
 message Subscription{
@@ -77,7 +68,6 @@ message Subscription{
   string profile_picture_url = 5; // the profile picture of the other user
 }
 
-
 message ListSubscriptionsResponse{
   repeated Subscription subscriptions = 1;
   common.Pagination pagination = 2;
@@ -86,12 +76,7 @@ message ListSubscriptionsResponse{
 // ------------------ Requests ------------------ //
 
 message ListUsersRequest{
-
-}
-
-message PaginationRequest{
-  int32 offset = 1;
-  int32 limit = 2;
+  repeated string user_ids = 1;
 }
 
 message RegisterUserRequest{
@@ -115,7 +100,7 @@ message GetUserRequest{
 }
 
 message SearchUsersRequest{
-  PaginationRequest pagination = 1;
+  common.PaginationRequest pagination = 1;
   string query = 2;
 }
 
@@ -130,7 +115,7 @@ message ChangePasswordRequest{
 }
 
 message ListSubscriptionsRequest{
-  PaginationRequest pagination = 1;
+  common.PaginationRequest pagination = 1;
   SubscriptionType subscription_type = 2;
   string username = 3;
 }

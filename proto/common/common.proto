@@ -11,3 +11,8 @@ message Pagination {
     int32 limit = 2;
     int32 records = 3;
 }
+
+message PaginationRequest{
+    int32 offset = 1;
+    int32 limit = 2;
+  }
