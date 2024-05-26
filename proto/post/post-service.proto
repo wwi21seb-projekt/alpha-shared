@@ -1,8 +1,12 @@
 syntax = "proto3";
 
-package serveralpha;
+package serveralpha.post;
 
-option go_package = "./proto;serveralpha";
+import "common/common.proto";
+import "user/user-service.proto";
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/post;serveralpha";
+
 
 // ------------------ Messages ------------------ //
 
@@ -12,17 +16,10 @@ message Location{
   int32 accuracy = 3;
 }
 
-message Profile{
-  string username = 1;
-  string nickname = 2;
-  string email = 3;
-  string profile_picture_url = 4;
-}
-
 message Post{
-  string postId = 1;
-  Profile author = 2;
-  string creationDate = 3;
+  string post_id = 1;
+  user.User author = 2;
+  string creation_date = 3;
   string content = 4;
   uint32 likes = 5;
   uint32 liked = 6;
@@ -36,15 +33,28 @@ message PostPagination{
   int32 records = 3;
 }
 
-message Empty{}
-
 // ------------------ Post Service ------------------ //
 
 service PostService{
+  rpc SearchPosts(SearchPostsRequest) returns (SearchPostsResponse);
+  rpc ListPosts(ListPostsRequest) returns (SearchPostsResponse);
+  rpc GetPost(GetPostRequest) returns (Post);
   rpc CreatePost(CreatePostRequest) returns (Post);
-  rpc QueryPosts(Empty) returns (QueryPostsResponse);
-  rpc DeletePost(Empty) returns (Empty);
-  rpc GetFeed(GetFeedRequest) returns (QueryPostsResponse);
+  /*rpc UpdatePost(UpdatePostRequest) returns (Post);*/
+  rpc DeletePost(GetPostRequest) returns (common.Empty);
+}
+
+service FeedService{
+  rpc GetGlobalFeed(GetFeedRequest) returns (SearchPostsResponse);  // Global, User, Personal
+  rpc GetUserFeed(GetFeedRequest) returns (SearchPostsResponse);    //
+  rpc GetPersonalFeed(GetFeedRequest) returns (SearchPostsResponse);
+}
+
+service InteractionService{
+  rpc LikePost(LikePostRequest) returns (Post);
+  rpc UnlikePost(UnlikePostRequest) returns (Post);
+  rpc CreateComment(CreateCommentRequest) returns (Comment);
+  rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse);
 }
 
 // ------------------ Request and Response ------------------ //
@@ -54,25 +64,58 @@ message CreatePostRequest{
   Location location = 2;
 }
 
-message QueryPostsResponse{
+message SearchPostsRequest{
+  string content = 1;
+  string hashtag = 2;
+}
+
+message SearchPostsResponse{
   repeated Post posts = 1;
   PostPagination pagination = 2;
 }
 
-message QueryPostsRequest{
+message ListPostsRequest{
   string last_post_id = 1;
   int32 limit = 2;
-  string query = 3;
+  string hashtag = 3;
+}
+
+message GetPostRequest{
+  string post_id = 1;
 }
 
 message GetFeedRequest{
   string last_post_id = 1;
   int32 limit = 2;
   bool is_authenticated = 3;
+  user.User author = 4;
 }
 
-// ------------------ User Service ------------------ //
+message LikePostRequest{
+  string post_id = 1;
+}
 
-service ProfileService{
-  rpc GetProfile(Empty) returns (Profile);
+message UnlikePostRequest{
+  string post_id = 1;
+}
+
+message CreateCommentRequest{
+  string post_id = 1;
+  string content = 2;
+}
+
+message ListCommentsRequest{
+  string post_id = 1;
+}
+
+message ListCommentsResponse{
+  repeated Comment comments = 1;
+  common.Pagination pagination = 2;
+}
+
+message Comment{
+  string comment_id = 1;
+  user.User author = 2;
+  string content = 3;
+  string creation_date = 4;
 }

@@ -2,12 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v5.27.0
-// source: user-service.proto
+// source: user/user-service.proto
 
 package serveralpha
 
 import (
 	context "context"
+	common "github.com/wwi21seb-projekt/alpha-shared/proto/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,18 +20,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthenticationService_Register_FullMethodName = "/serveralpha.AuthenticationService/Register"
-	AuthenticationService_Activate_FullMethodName = "/serveralpha.AuthenticationService/Activate"
-	AuthenticationService_Login_FullMethodName    = "/serveralpha.AuthenticationService/Login"
+	AuthenticationService_RegisterUser_FullMethodName          = "/serveralpha.user.AuthenticationService/RegisterUser"
+	AuthenticationService_ActivateUser_FullMethodName          = "/serveralpha.user.AuthenticationService/ActivateUser"
+	AuthenticationService_LoginUser_FullMethodName             = "/serveralpha.user.AuthenticationService/LoginUser"
+	AuthenticationService_UpdatePassword_FullMethodName        = "/serveralpha.user.AuthenticationService/UpdatePassword"
+	AuthenticationService_ResendActivationToken_FullMethodName = "/serveralpha.user.AuthenticationService/ResendActivationToken"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
-	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Profile, error)
-	Activate(ctx context.Context, in *ActivateRequest, opts ...grpc.CallOption) (*Empty, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Empty, error)
+	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error)
+	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*User, error)
+	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*User, error)
+	UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error)
+	ResendActivationToken(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*common.Empty, error)
 }
 
 type authenticationServiceClient struct {
@@ -41,27 +46,45 @@ func NewAuthenticationServiceClient(cc grpc.ClientConnInterface) AuthenticationS
 	return &authenticationServiceClient{cc}
 }
 
-func (c *authenticationServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Profile, error) {
-	out := new(Profile)
-	err := c.cc.Invoke(ctx, AuthenticationService_Register_FullMethodName, in, out, opts...)
+func (c *authenticationServiceClient) RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, AuthenticationService_RegisterUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authenticationServiceClient) Activate(ctx context.Context, in *ActivateRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, AuthenticationService_Activate_FullMethodName, in, out, opts...)
+func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, AuthenticationService_ActivateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authenticationServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, AuthenticationService_Login_FullMethodName, in, out, opts...)
+func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, AuthenticationService_LoginUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+	out := new(common.Empty)
+	err := c.cc.Invoke(ctx, AuthenticationService_UpdatePassword_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) ResendActivationToken(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+	out := new(common.Empty)
+	err := c.cc.Invoke(ctx, AuthenticationService_ResendActivationToken_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,9 +95,11 @@ func (c *authenticationServiceClient) Login(ctx context.Context, in *LoginReques
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility
 type AuthenticationServiceServer interface {
-	Register(context.Context, *RegisterRequest) (*Profile, error)
-	Activate(context.Context, *ActivateRequest) (*Empty, error)
-	Login(context.Context, *LoginRequest) (*Empty, error)
+	RegisterUser(context.Context, *RegisterUserRequest) (*User, error)
+	ActivateUser(context.Context, *ActivateUserRequest) (*User, error)
+	LoginUser(context.Context, *LoginUserRequest) (*User, error)
+	UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error)
+	ResendActivationToken(context.Context, *GetUserRequest) (*common.Empty, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -82,14 +107,20 @@ type AuthenticationServiceServer interface {
 type UnimplementedAuthenticationServiceServer struct {
 }
 
-func (UnimplementedAuthenticationServiceServer) Register(context.Context, *RegisterRequest) (*Profile, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+func (UnimplementedAuthenticationServiceServer) RegisterUser(context.Context, *RegisterUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) Activate(context.Context, *ActivateRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Activate not implemented")
+func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) Login(context.Context, *LoginRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *LoginUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) ResendActivationToken(context.Context, *GetUserRequest) (*common.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendActivationToken not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 
@@ -104,56 +135,92 @@ func RegisterAuthenticationServiceServer(s grpc.ServiceRegistrar, srv Authentica
 	s.RegisterService(&AuthenticationService_ServiceDesc, srv)
 }
 
-func _AuthenticationService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
+func _AuthenticationService_RegisterUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).Register(ctx, in)
+		return srv.(AuthenticationServiceServer).RegisterUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthenticationService_Register_FullMethodName,
+		FullMethod: AuthenticationService_RegisterUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).Register(ctx, req.(*RegisterRequest))
+		return srv.(AuthenticationServiceServer).RegisterUser(ctx, req.(*RegisterUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthenticationService_Activate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ActivateRequest)
+func _AuthenticationService_ActivateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).Activate(ctx, in)
+		return srv.(AuthenticationServiceServer).ActivateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthenticationService_Activate_FullMethodName,
+		FullMethod: AuthenticationService_ActivateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).Activate(ctx, req.(*ActivateRequest))
+		return srv.(AuthenticationServiceServer).ActivateUser(ctx, req.(*ActivateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthenticationService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
+func _AuthenticationService_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).Login(ctx, in)
+		return srv.(AuthenticationServiceServer).LoginUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthenticationService_Login_FullMethodName,
+		FullMethod: AuthenticationService_LoginUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).Login(ctx, req.(*LoginRequest))
+		return srv.(AuthenticationServiceServer).LoginUser(ctx, req.(*LoginUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangePasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).UpdatePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_UpdatePassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).UpdatePassword(ctx, req.(*ChangePasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_ResendActivationToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).ResendActivationToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_ResendActivationToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).ResendActivationToken(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -162,240 +229,248 @@ func _AuthenticationService_Login_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.AuthenticationService",
+	ServiceName: "serveralpha.user.AuthenticationService",
 	HandlerType: (*AuthenticationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Register",
-			Handler:    _AuthenticationService_Register_Handler,
+			MethodName: "RegisterUser",
+			Handler:    _AuthenticationService_RegisterUser_Handler,
 		},
 		{
-			MethodName: "Activate",
-			Handler:    _AuthenticationService_Activate_Handler,
+			MethodName: "ActivateUser",
+			Handler:    _AuthenticationService_ActivateUser_Handler,
 		},
 		{
-			MethodName: "Login",
-			Handler:    _AuthenticationService_Login_Handler,
+			MethodName: "LoginUser",
+			Handler:    _AuthenticationService_LoginUser_Handler,
+		},
+		{
+			MethodName: "UpdatePassword",
+			Handler:    _AuthenticationService_UpdatePassword_Handler,
+		},
+		{
+			MethodName: "ResendActivationToken",
+			Handler:    _AuthenticationService_ResendActivationToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user-service.proto",
+	Metadata: "user/user-service.proto",
 }
 
 const (
-	ProfileService_GetProfile_FullMethodName        = "/serveralpha.ProfileService/GetProfile"
-	ProfileService_SearchProfiles_FullMethodName    = "/serveralpha.ProfileService/SearchProfiles"
-	ProfileService_ChangeTrivialInfo_FullMethodName = "/serveralpha.ProfileService/ChangeTrivialInfo"
-	ProfileService_ChangePassword_FullMethodName    = "/serveralpha.ProfileService/ChangePassword"
+	UserService_GetUser_FullMethodName     = "/serveralpha.user.UserService/GetUser"
+	UserService_UpdateUser_FullMethodName  = "/serveralpha.user.UserService/UpdateUser"
+	UserService_SearchUsers_FullMethodName = "/serveralpha.user.UserService/SearchUsers"
+	UserService_ListUsers_FullMethodName   = "/serveralpha.user.UserService/ListUsers"
 )
 
-// ProfileServiceClient is the client API for ProfileService service.
+// UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ProfileServiceClient interface {
-	GetProfile(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error)
-	SearchProfiles(ctx context.Context, in *SearchProfilesRequest, opts ...grpc.CallOption) (*PaginatedProfiles, error)
-	ChangeTrivialInfo(ctx context.Context, in *ChangeTrivialInfoRequest, opts ...grpc.CallOption) (*TrivialInfo, error)
-	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*Empty, error)
+type UserServiceClient interface {
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
+	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 }
 
-type profileServiceClient struct {
+type userServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewProfileServiceClient(cc grpc.ClientConnInterface) ProfileServiceClient {
-	return &profileServiceClient{cc}
+func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
+	return &userServiceClient{cc}
 }
 
-func (c *profileServiceClient) GetProfile(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error) {
-	out := new(Profile)
-	err := c.cc.Invoke(ctx, ProfileService_GetProfile_FullMethodName, in, out, opts...)
+func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserService_GetUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *profileServiceClient) SearchProfiles(ctx context.Context, in *SearchProfilesRequest, opts ...grpc.CallOption) (*PaginatedProfiles, error) {
-	out := new(PaginatedProfiles)
-	err := c.cc.Invoke(ctx, ProfileService_SearchProfiles_FullMethodName, in, out, opts...)
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserService_UpdateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *profileServiceClient) ChangeTrivialInfo(ctx context.Context, in *ChangeTrivialInfoRequest, opts ...grpc.CallOption) (*TrivialInfo, error) {
-	out := new(TrivialInfo)
-	err := c.cc.Invoke(ctx, ProfileService_ChangeTrivialInfo_FullMethodName, in, out, opts...)
+func (c *userServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
+	out := new(ListUsersResponse)
+	err := c.cc.Invoke(ctx, UserService_SearchUsers_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *profileServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, ProfileService_ChangePassword_FullMethodName, in, out, opts...)
+func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
+	out := new(ListUsersResponse)
+	err := c.cc.Invoke(ctx, UserService_ListUsers_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ProfileServiceServer is the server API for ProfileService service.
-// All implementations must embed UnimplementedProfileServiceServer
+// UserServiceServer is the server API for UserService service.
+// All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
-type ProfileServiceServer interface {
-	GetProfile(context.Context, *Empty) (*Profile, error)
-	SearchProfiles(context.Context, *SearchProfilesRequest) (*PaginatedProfiles, error)
-	ChangeTrivialInfo(context.Context, *ChangeTrivialInfoRequest) (*TrivialInfo, error)
-	ChangePassword(context.Context, *ChangePasswordRequest) (*Empty, error)
-	mustEmbedUnimplementedProfileServiceServer()
+type UserServiceServer interface {
+	GetUser(context.Context, *GetUserRequest) (*User, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*User, error)
+	SearchUsers(context.Context, *SearchUsersRequest) (*ListUsersResponse, error)
+	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-// UnimplementedProfileServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedProfileServiceServer struct {
+// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedProfileServiceServer) GetProfile(context.Context, *Empty) (*Profile, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
+func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedProfileServiceServer) SearchProfiles(context.Context, *SearchProfilesRequest) (*PaginatedProfiles, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchProfiles not implemented")
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedProfileServiceServer) ChangeTrivialInfo(context.Context, *ChangeTrivialInfoRequest) (*TrivialInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChangeTrivialInfo not implemented")
+func (UnimplementedUserServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*ListUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
 }
-func (UnimplementedProfileServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
+func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
 }
-func (UnimplementedProfileServiceServer) mustEmbedUnimplementedProfileServiceServer() {}
+func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
-// UnsafeProfileServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ProfileServiceServer will
+// UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserServiceServer will
 // result in compilation errors.
-type UnsafeProfileServiceServer interface {
-	mustEmbedUnimplementedProfileServiceServer()
+type UnsafeUserServiceServer interface {
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-func RegisterProfileServiceServer(s grpc.ServiceRegistrar, srv ProfileServiceServer) {
-	s.RegisterService(&ProfileService_ServiceDesc, srv)
+func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
+	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _ProfileService_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProfileServiceServer).GetProfile(ctx, in)
+		return srv.(UserServiceServer).GetUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProfileService_GetProfile_FullMethodName,
+		FullMethod: UserService_GetUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).GetProfile(ctx, req.(*Empty))
+		return srv.(UserServiceServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfileService_SearchProfiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchProfilesRequest)
+func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProfileServiceServer).SearchProfiles(ctx, in)
+		return srv.(UserServiceServer).UpdateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProfileService_SearchProfiles_FullMethodName,
+		FullMethod: UserService_UpdateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).SearchProfiles(ctx, req.(*SearchProfilesRequest))
+		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfileService_ChangeTrivialInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangeTrivialInfoRequest)
+func _UserService_SearchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchUsersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProfileServiceServer).ChangeTrivialInfo(ctx, in)
+		return srv.(UserServiceServer).SearchUsers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProfileService_ChangeTrivialInfo_FullMethodName,
+		FullMethod: UserService_SearchUsers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).ChangeTrivialInfo(ctx, req.(*ChangeTrivialInfoRequest))
+		return srv.(UserServiceServer).SearchUsers(ctx, req.(*SearchUsersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfileService_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangePasswordRequest)
+func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUsersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProfileServiceServer).ChangePassword(ctx, in)
+		return srv.(UserServiceServer).ListUsers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProfileService_ChangePassword_FullMethodName,
+		FullMethod: UserService_ListUsers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
+		return srv.(UserServiceServer).ListUsers(ctx, req.(*ListUsersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ProfileService_ServiceDesc is the grpc.ServiceDesc for ProfileService service.
+// UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ProfileService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.ProfileService",
-	HandlerType: (*ProfileServiceServer)(nil),
+var UserService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "serveralpha.user.UserService",
+	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetProfile",
-			Handler:    _ProfileService_GetProfile_Handler,
+			MethodName: "GetUser",
+			Handler:    _UserService_GetUser_Handler,
 		},
 		{
-			MethodName: "SearchProfiles",
-			Handler:    _ProfileService_SearchProfiles_Handler,
+			MethodName: "UpdateUser",
+			Handler:    _UserService_UpdateUser_Handler,
 		},
 		{
-			MethodName: "ChangeTrivialInfo",
-			Handler:    _ProfileService_ChangeTrivialInfo_Handler,
+			MethodName: "SearchUsers",
+			Handler:    _UserService_SearchUsers_Handler,
 		},
 		{
-			MethodName: "ChangePassword",
-			Handler:    _ProfileService_ChangePassword_Handler,
+			MethodName: "ListUsers",
+			Handler:    _UserService_ListUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user-service.proto",
+	Metadata: "user/user-service.proto",
 }
 
 const (
-	SubscriptionService_GetSubscriptions_FullMethodName = "/serveralpha.SubscriptionService/GetSubscriptions"
-	SubscriptionService_Subscribe_FullMethodName        = "/serveralpha.SubscriptionService/Subscribe"
-	SubscriptionService_Unsubscribe_FullMethodName      = "/serveralpha.SubscriptionService/Unsubscribe"
+	SubscriptionService_ListSubscriptions_FullMethodName  = "/serveralpha.user.SubscriptionService/ListSubscriptions"
+	SubscriptionService_CreateSubscription_FullMethodName = "/serveralpha.user.SubscriptionService/CreateSubscription"
+	SubscriptionService_DeleteSubscription_FullMethodName = "/serveralpha.user.SubscriptionService/DeleteSubscription"
 )
 
 // SubscriptionServiceClient is the client API for SubscriptionService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SubscriptionServiceClient interface {
-	GetSubscriptions(ctx context.Context, in *GetSubscriptionsRequest, opts ...grpc.CallOption) (*Subscriptions, error)
-	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*Subscription, error)
-	Unsubscribe(ctx context.Context, in *UnsubscribeRequest, opts ...grpc.CallOption) (*Empty, error)
+	ListSubscriptions(ctx context.Context, in *ListSubscriptionsRequest, opts ...grpc.CallOption) (*ListSubscriptionsResponse, error)
+	CreateSubscription(ctx context.Context, in *CreateSubscriptionRequest, opts ...grpc.CallOption) (*Subscription, error)
+	DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*common.Empty, error)
 }
 
 type subscriptionServiceClient struct {
@@ -406,27 +481,27 @@ func NewSubscriptionServiceClient(cc grpc.ClientConnInterface) SubscriptionServi
 	return &subscriptionServiceClient{cc}
 }
 
-func (c *subscriptionServiceClient) GetSubscriptions(ctx context.Context, in *GetSubscriptionsRequest, opts ...grpc.CallOption) (*Subscriptions, error) {
-	out := new(Subscriptions)
-	err := c.cc.Invoke(ctx, SubscriptionService_GetSubscriptions_FullMethodName, in, out, opts...)
+func (c *subscriptionServiceClient) ListSubscriptions(ctx context.Context, in *ListSubscriptionsRequest, opts ...grpc.CallOption) (*ListSubscriptionsResponse, error) {
+	out := new(ListSubscriptionsResponse)
+	err := c.cc.Invoke(ctx, SubscriptionService_ListSubscriptions_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *subscriptionServiceClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*Subscription, error) {
+func (c *subscriptionServiceClient) CreateSubscription(ctx context.Context, in *CreateSubscriptionRequest, opts ...grpc.CallOption) (*Subscription, error) {
 	out := new(Subscription)
-	err := c.cc.Invoke(ctx, SubscriptionService_Subscribe_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, SubscriptionService_CreateSubscription_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *subscriptionServiceClient) Unsubscribe(ctx context.Context, in *UnsubscribeRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, SubscriptionService_Unsubscribe_FullMethodName, in, out, opts...)
+func (c *subscriptionServiceClient) DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+	out := new(common.Empty)
+	err := c.cc.Invoke(ctx, SubscriptionService_DeleteSubscription_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -437,9 +512,9 @@ func (c *subscriptionServiceClient) Unsubscribe(ctx context.Context, in *Unsubsc
 // All implementations must embed UnimplementedSubscriptionServiceServer
 // for forward compatibility
 type SubscriptionServiceServer interface {
-	GetSubscriptions(context.Context, *GetSubscriptionsRequest) (*Subscriptions, error)
-	Subscribe(context.Context, *SubscribeRequest) (*Subscription, error)
-	Unsubscribe(context.Context, *UnsubscribeRequest) (*Empty, error)
+	ListSubscriptions(context.Context, *ListSubscriptionsRequest) (*ListSubscriptionsResponse, error)
+	CreateSubscription(context.Context, *CreateSubscriptionRequest) (*Subscription, error)
+	DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*common.Empty, error)
 	mustEmbedUnimplementedSubscriptionServiceServer()
 }
 
@@ -447,14 +522,14 @@ type SubscriptionServiceServer interface {
 type UnimplementedSubscriptionServiceServer struct {
 }
 
-func (UnimplementedSubscriptionServiceServer) GetSubscriptions(context.Context, *GetSubscriptionsRequest) (*Subscriptions, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptions not implemented")
+func (UnimplementedSubscriptionServiceServer) ListSubscriptions(context.Context, *ListSubscriptionsRequest) (*ListSubscriptionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSubscriptions not implemented")
 }
-func (UnimplementedSubscriptionServiceServer) Subscribe(context.Context, *SubscribeRequest) (*Subscription, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+func (UnimplementedSubscriptionServiceServer) CreateSubscription(context.Context, *CreateSubscriptionRequest) (*Subscription, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSubscription not implemented")
 }
-func (UnimplementedSubscriptionServiceServer) Unsubscribe(context.Context, *UnsubscribeRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Unsubscribe not implemented")
+func (UnimplementedSubscriptionServiceServer) DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*common.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSubscription not implemented")
 }
 func (UnimplementedSubscriptionServiceServer) mustEmbedUnimplementedSubscriptionServiceServer() {}
 
@@ -469,56 +544,56 @@ func RegisterSubscriptionServiceServer(s grpc.ServiceRegistrar, srv Subscription
 	s.RegisterService(&SubscriptionService_ServiceDesc, srv)
 }
 
-func _SubscriptionService_GetSubscriptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetSubscriptionsRequest)
+func _SubscriptionService_ListSubscriptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSubscriptionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SubscriptionServiceServer).GetSubscriptions(ctx, in)
+		return srv.(SubscriptionServiceServer).ListSubscriptions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SubscriptionService_GetSubscriptions_FullMethodName,
+		FullMethod: SubscriptionService_ListSubscriptions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SubscriptionServiceServer).GetSubscriptions(ctx, req.(*GetSubscriptionsRequest))
+		return srv.(SubscriptionServiceServer).ListSubscriptions(ctx, req.(*ListSubscriptionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SubscriptionService_Subscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SubscribeRequest)
+func _SubscriptionService_CreateSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSubscriptionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SubscriptionServiceServer).Subscribe(ctx, in)
+		return srv.(SubscriptionServiceServer).CreateSubscription(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SubscriptionService_Subscribe_FullMethodName,
+		FullMethod: SubscriptionService_CreateSubscription_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SubscriptionServiceServer).Subscribe(ctx, req.(*SubscribeRequest))
+		return srv.(SubscriptionServiceServer).CreateSubscription(ctx, req.(*CreateSubscriptionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SubscriptionService_Unsubscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UnsubscribeRequest)
+func _SubscriptionService_DeleteSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSubscriptionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SubscriptionServiceServer).Unsubscribe(ctx, in)
+		return srv.(SubscriptionServiceServer).DeleteSubscription(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SubscriptionService_Unsubscribe_FullMethodName,
+		FullMethod: SubscriptionService_DeleteSubscription_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SubscriptionServiceServer).Unsubscribe(ctx, req.(*UnsubscribeRequest))
+		return srv.(SubscriptionServiceServer).DeleteSubscription(ctx, req.(*DeleteSubscriptionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -527,22 +602,22 @@ func _SubscriptionService_Unsubscribe_Handler(srv interface{}, ctx context.Conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SubscriptionService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.SubscriptionService",
+	ServiceName: "serveralpha.user.SubscriptionService",
 	HandlerType: (*SubscriptionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetSubscriptions",
-			Handler:    _SubscriptionService_GetSubscriptions_Handler,
+			MethodName: "ListSubscriptions",
+			Handler:    _SubscriptionService_ListSubscriptions_Handler,
 		},
 		{
-			MethodName: "Subscribe",
-			Handler:    _SubscriptionService_Subscribe_Handler,
+			MethodName: "CreateSubscription",
+			Handler:    _SubscriptionService_CreateSubscription_Handler,
 		},
 		{
-			MethodName: "Unsubscribe",
-			Handler:    _SubscriptionService_Unsubscribe_Handler,
+			MethodName: "DeleteSubscription",
+			Handler:    _SubscriptionService_DeleteSubscription_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user-service.proto",
+	Metadata: "user/user-service.proto",
 }
