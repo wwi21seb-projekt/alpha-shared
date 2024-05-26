@@ -15,7 +15,6 @@ service AuthenticationService{
 service ProfileService{
   rpc GetProfile(Empty) returns (Profile);
   rpc SearchProfiles(SearchProfilesRequest) returns (PaginatedProfiles);
-  rpc GetFeed(GetFeedRequest) returns (PaginatedPosts);
   rpc ChangeTrivialInfo(ChangeTrivialInfoRequest) returns (TrivialInfo);
   rpc ChangePassword(ChangePasswordRequest) returns (Empty);
 }
@@ -125,11 +124,6 @@ message LoginRequest{
 message SearchProfilesRequest{
   PaginationRequest pagination = 1;
   string query = 2;
-}
-
-message GetFeedRequest{
-  PaginationRequest pagination = 1;
-  string username = 2;
 }
 
 message ChangeTrivialInfoRequest{

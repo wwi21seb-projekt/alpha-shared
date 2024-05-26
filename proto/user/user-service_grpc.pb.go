@@ -185,7 +185,6 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 const (
 	ProfileService_GetProfile_FullMethodName        = "/serveralpha.ProfileService/GetProfile"
 	ProfileService_SearchProfiles_FullMethodName    = "/serveralpha.ProfileService/SearchProfiles"
-	ProfileService_GetFeed_FullMethodName           = "/serveralpha.ProfileService/GetFeed"
 	ProfileService_ChangeTrivialInfo_FullMethodName = "/serveralpha.ProfileService/ChangeTrivialInfo"
 	ProfileService_ChangePassword_FullMethodName    = "/serveralpha.ProfileService/ChangePassword"
 )
@@ -196,7 +195,6 @@ const (
 type ProfileServiceClient interface {
 	GetProfile(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error)
 	SearchProfiles(ctx context.Context, in *SearchProfilesRequest, opts ...grpc.CallOption) (*PaginatedProfiles, error)
-	GetFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*PaginatedPosts, error)
 	ChangeTrivialInfo(ctx context.Context, in *ChangeTrivialInfoRequest, opts ...grpc.CallOption) (*TrivialInfo, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*Empty, error)
 }
@@ -227,15 +225,6 @@ func (c *profileServiceClient) SearchProfiles(ctx context.Context, in *SearchPro
 	return out, nil
 }
 
-func (c *profileServiceClient) GetFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*PaginatedPosts, error) {
-	out := new(PaginatedPosts)
-	err := c.cc.Invoke(ctx, ProfileService_GetFeed_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *profileServiceClient) ChangeTrivialInfo(ctx context.Context, in *ChangeTrivialInfoRequest, opts ...grpc.CallOption) (*TrivialInfo, error) {
 	out := new(TrivialInfo)
 	err := c.cc.Invoke(ctx, ProfileService_ChangeTrivialInfo_FullMethodName, in, out, opts...)
@@ -260,7 +249,6 @@ func (c *profileServiceClient) ChangePassword(ctx context.Context, in *ChangePas
 type ProfileServiceServer interface {
 	GetProfile(context.Context, *Empty) (*Profile, error)
 	SearchProfiles(context.Context, *SearchProfilesRequest) (*PaginatedProfiles, error)
-	GetFeed(context.Context, *GetFeedRequest) (*PaginatedPosts, error)
 	ChangeTrivialInfo(context.Context, *ChangeTrivialInfoRequest) (*TrivialInfo, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*Empty, error)
 	mustEmbedUnimplementedProfileServiceServer()
@@ -275,9 +263,6 @@ func (UnimplementedProfileServiceServer) GetProfile(context.Context, *Empty) (*P
 }
 func (UnimplementedProfileServiceServer) SearchProfiles(context.Context, *SearchProfilesRequest) (*PaginatedProfiles, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchProfiles not implemented")
-}
-func (UnimplementedProfileServiceServer) GetFeed(context.Context, *GetFeedRequest) (*PaginatedPosts, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFeed not implemented")
 }
 func (UnimplementedProfileServiceServer) ChangeTrivialInfo(context.Context, *ChangeTrivialInfoRequest) (*TrivialInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeTrivialInfo not implemented")
@@ -334,24 +319,6 @@ func _ProfileService_SearchProfiles_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfileService_GetFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFeedRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfileServiceServer).GetFeed(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProfileService_GetFeed_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).GetFeed(ctx, req.(*GetFeedRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ProfileService_ChangeTrivialInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChangeTrivialInfoRequest)
 	if err := dec(in); err != nil {
@@ -402,10 +369,6 @@ var ProfileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchProfiles",
 			Handler:    _ProfileService_SearchProfiles_Handler,
-		},
-		{
-			MethodName: "GetFeed",
-			Handler:    _ProfileService_GetFeed_Handler,
 		},
 		{
 			MethodName: "ChangeTrivialInfo",
