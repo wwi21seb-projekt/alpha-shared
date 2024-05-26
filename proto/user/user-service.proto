@@ -1,46 +1,50 @@
 syntax = "proto3";
 
-package serveralpha;
+package serveralpha.user;
 
-option go_package = "./proto;serveralpha";
+import "common/common.proto";
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/user;serveralpha";
+
+// GUIDELINES
+// https://cloud.google.com/apis/design/standard_methods
+// https://cloud.google.com/apis/design/custom_methods
+// https://cloud.google.com/apis/design/naming_convention#method_names
+// "The method names should follow the naming convention of VerbNoun in upper camel case, where the noun is typically the resource type."
 
 // ------------------ Services ------------------ //
 
-service AuthenticationService{
-  rpc Register(RegisterRequest) returns (Profile);
-  rpc Activate(ActivateRequest) returns (Empty);
-  rpc Login(LoginRequest) returns (Empty);
+
+service AuthenticationService{ // https://cloud.google.com/apis/design/naming_convention#interface_names
+  rpc RegisterUser(RegisterUserRequest) returns (User);
+  rpc ActivateUser(ActivateUserRequest) returns (User);
+  rpc LoginUser(LoginUserRequest) returns (User);
+  rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
+  rpc ResendActivationToken(GetUserRequest) returns (common.Empty);
 }
 
-service ProfileService{
-  rpc GetProfile(Empty) returns (Profile);
-  rpc SearchProfiles(SearchProfilesRequest) returns (PaginatedProfiles);
-  rpc ChangeTrivialInfo(ChangeTrivialInfoRequest) returns (TrivialInfo);
-  rpc ChangePassword(ChangePasswordRequest) returns (Empty);
+service UserService{
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc UpdateUser(UpdateUserRequest) returns (User);
+  rpc SearchUsers(SearchUsersRequest) returns (ListUsersResponse);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
 }
 
 service SubscriptionService{
-  rpc GetSubscriptions(GetSubscriptionsRequest) returns (Subscriptions);
-  rpc Subscribe(SubscribeRequest) returns (Subscription);
-  rpc Unsubscribe(UnsubscribeRequest) returns (Empty);
+  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (Subscription);
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (common.Empty);
 }
 
 // ------------------ Enums ------------------ //
 
 enum SubscriptionType{
-  FOLLOWER = 0; // default by setting to 0
-  FOLLOWING = 1;
+  SUBSCRIPTION_TYPE_UNSPECIFIED = 0; // default by setting to 0
+  SUBSCRIPTION_TYPE_FOLLOWER = 1;
+  SUBSCRIPTION_TYPE_FOLLOWING = 2;
 }
 
 // ------------------ Messages ------------------ //
-
-message Empty{}
-
-message Pagination{
-  int32 offset = 1;
-  int32 limit = 2;
-  int32 records = 3;
-}
 
 message Location{
   float latitude = 1;
@@ -48,29 +52,16 @@ message Location{
   int32 accuracy = 3;
 }
 
-message Profile{
+message User{
   string username = 1;
   string nickname = 2;
   string email = 3;
   string profile_picture_url = 4;
 }
 
-message PaginatedProfiles{
-  repeated Profile profiles = 1;
-  Pagination pagination = 2;
-}
-
-message Post{
-  string post_id = 1;
-  Profile author = 2;
-  string created_at = 3;
-  string content = 4;
-  Location location = 5;
-}
-
-message PaginatedPosts{
-  repeated Post posts = 1;
-  Pagination pagination = 2;
+message ListUsersResponse{
+  repeated User profiles = 1;
+  serveralpha.common.Pagination pagination = 2;
 }
 
 message TrivialInfo{
@@ -79,13 +70,6 @@ message TrivialInfo{
 }
 
 message Subscription{
-  string subscription_id = 1;
-  string subscription_date = 2;
-  string followed_username = 3;
-  string follower_username = 4;
-}
-
-message DetailedSubscription{
   string follower_subscription_id = 1; // populated when the other user follows the current user
   string followed_subscription_id = 2; // populated when the current user follows the other user
   string username = 3; // the username of the other user
@@ -93,40 +77,49 @@ message DetailedSubscription{
   string profile_picture_url = 5; // the profile picture of the other user
 }
 
-message Subscriptions{
-  repeated DetailedSubscription subscriptions = 1;
-  Pagination pagination = 2;
+
+message ListSubscriptionsResponse{
+  repeated Subscription subscriptions = 1;
+  common.Pagination pagination = 2;
 }
 
 // ------------------ Requests ------------------ //
+
+message ListUsersRequest{
+
+}
 
 message PaginationRequest{
   int32 offset = 1;
   int32 limit = 2;
 }
 
-message RegisterRequest{
+message RegisterUserRequest{
   string username = 1;
   string password = 2;
   string nickname = 3;
   string email = 4;
 }
 
-message ActivateRequest{
+message ActivateUserRequest{
   string token = 1;
 }
 
-message LoginRequest{
+message LoginUserRequest{
   string username = 1;
   string password = 2;
 }
 
-message SearchProfilesRequest{
+message GetUserRequest{
+  string username = 1;
+}
+
+message SearchUsersRequest{
   PaginationRequest pagination = 1;
   string query = 2;
 }
 
-message ChangeTrivialInfoRequest{
+message UpdateUserRequest{
   string nickname = 1;
   string status = 2;
 }
@@ -136,16 +129,16 @@ message ChangePasswordRequest{
   string new_password = 2;
 }
 
-message GetSubscriptionsRequest{
+message ListSubscriptionsRequest{
   PaginationRequest pagination = 1;
   SubscriptionType subscription_type = 2;
   string username = 3;
 }
 
-message SubscribeRequest{
-  string followedUsername = 1;
+message CreateSubscriptionRequest{
+  string followed_username = 1;
 }
 
-message UnsubscribeRequest{
+message DeleteSubscriptionRequest{
   string subscription_id = 1;
 }

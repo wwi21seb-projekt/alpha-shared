@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package serveralpha.common;
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/common;serveralpha";
+
+message Empty {}
+
+message Pagination {
+    int32 offset = 1;
+    int32 limit = 2;
+    int32 records = 3;
+}

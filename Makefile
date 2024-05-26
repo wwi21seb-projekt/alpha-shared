@@ -7,9 +7,5 @@ init:
 
 .PHONY: proto
 proto:
-	@protoc --proto_path=./proto/post --go_out=./proto/post --go_opt=paths=source_relative \
-		--go-grpc_out=./proto/post --go-grpc_opt=paths=source_relative proto/post/*.proto
-	@protoc --proto_path=./proto/user --go_out=./proto/user --go_opt=paths=source_relative \
-    		--go-grpc_out=./proto/user --go-grpc_opt=paths=source_relative proto/user/*.proto
-	@protoc --proto_path=./proto/health --go_out=./proto/health --go_opt=paths=source_relative \
-		--go-grpc_out=./proto/health --go-grpc_opt=paths=source_relative proto/health/*.proto
+	@protoc --proto_path=./proto --go_out=./proto --go_opt=paths=source_relative \
+		--go-grpc_out=./proto --go-grpc_opt=paths=source_relative proto/*/*.proto
