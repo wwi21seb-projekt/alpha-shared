@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package serveralpha.mail;
+
+import "common/common.proto";
+import "user/user-service.proto";
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/mail;serveralpha";
+
+// ------------------ Services ------------------ //
+
+service MailService {
+    rpc SendTokenMail(TokenMailRequest) returns (common.Empty);
+    rpc SendConfirmationMail(ConfirmationMailRequest) returns (common.Empty);
+}
+
+// ------------------ Enums ------------------ //
+
+enum TokenMailType {
+    TOKENMAILTYPE_REGISTRATION = 0;
+    TOKENMAILTYPE_PASSWORD_RESET = 1;
+}
+
+// ------------------ Requests ------------------ //
+
+message TokenMailRequest {
+    user.User user = 1;
+    string token = 2;
+    TokenMailType type = 3;
+}
+
+message ConfirmationMailRequest {
+    user.User user = 1;
+}
+

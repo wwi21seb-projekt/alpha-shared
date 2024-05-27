@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"errors"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
@@ -48,7 +49,6 @@ func (db *DB) Rollback(ctx context.Context, tx pgx.Tx) error {
 	err := tx.Rollback(ctx)
 
 	// Ignore the error if the transaction was already committed
-
 	if err != nil && errors.Is(err, pgx.ErrTxClosed) {
 		return nil
 	}
