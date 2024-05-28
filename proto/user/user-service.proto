@@ -24,15 +24,16 @@ service AuthenticationService{ // https://cloud.google.com/apis/design/naming_co
 }
 
 service UserService{
-  rpc GetUser(GetUserRequest) returns (User);
-  rpc UpdateUser(UpdateUserRequest) returns (User);
+  rpc GetAuthor(GetUserRequest) returns (User);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
   rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
 }
 
 service SubscriptionService{
   rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
-  rpc CreateSubscription(CreateSubscriptionRequest) returns (Subscription);
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
   rpc DeleteSubscription(DeleteSubscriptionRequest) returns (common.Empty);
 }
 
@@ -56,6 +57,22 @@ message UserIdResponse{
   string user_id = 1;
 }
 
+message GetUserResponse{
+  string username = 1;
+  string nickname = 2;
+  string status = 3;
+  string profile_picture_url = 4;
+  int32 follower_count = 5;
+  int32 following_count = 6;
+  int32 post_count = 7;
+  string subscription_id = 8; // if present, the current user is following the requested user
+}
+
+message UpdateUserResponse {
+  string nickname = 1;
+  string status = 2;
+}
+
 message SearchUsersResponse{
   repeated User profiles = 1;
   common.Pagination pagination = 2;
@@ -63,6 +80,13 @@ message SearchUsersResponse{
 
 message ListUsersResponse{
   repeated User profiles = 1;
+}
+
+message CreateSubscriptionResponse{
+  string subscription_id = 1;
+  string subscription_date = 2;
+  string follower_username = 3;
+  string followed_username = 4;
 }
 
 message Subscription{
