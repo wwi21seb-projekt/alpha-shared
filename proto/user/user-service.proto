@@ -101,7 +101,8 @@ message LoginUserRequest{
 }
 
 message GetUserRequest{
-  string username = 1;
+  string user_id = 1;
+  string username = 2;
 }
 
 message SearchUsersRequest{
