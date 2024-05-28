@@ -20,10 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthenticationService_RegisterUser_FullMethodName   = "/serveralpha.user.AuthenticationService/RegisterUser"
-	AuthenticationService_ActivateUser_FullMethodName   = "/serveralpha.user.AuthenticationService/ActivateUser"
-	AuthenticationService_LoginUser_FullMethodName      = "/serveralpha.user.AuthenticationService/LoginUser"
-	AuthenticationService_UpdatePassword_FullMethodName = "/serveralpha.user.AuthenticationService/UpdatePassword"
+	AuthenticationService_RegisterUser_FullMethodName          = "/serveralpha.user.AuthenticationService/RegisterUser"
+	AuthenticationService_ResendActivationEmail_FullMethodName = "/serveralpha.user.AuthenticationService/ResendActivationEmail"
+	AuthenticationService_ActivateUser_FullMethodName          = "/serveralpha.user.AuthenticationService/ActivateUser"
+	AuthenticationService_LoginUser_FullMethodName             = "/serveralpha.user.AuthenticationService/LoginUser"
+	AuthenticationService_UpdatePassword_FullMethodName        = "/serveralpha.user.AuthenticationService/UpdatePassword"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
@@ -31,6 +32,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
 	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error)
+	ResendActivationEmail(ctx context.Context, in *ResendActivationEmailRequest, opts ...grpc.CallOption) (*common.Empty, error)
 	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*UserIdResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*UserIdResponse, error)
 	UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error)
@@ -47,6 +49,15 @@ func NewAuthenticationServiceClient(cc grpc.ClientConnInterface) AuthenticationS
 func (c *authenticationServiceClient) RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
 	err := c.cc.Invoke(ctx, AuthenticationService_RegisterUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) ResendActivationEmail(ctx context.Context, in *ResendActivationEmailRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+	out := new(common.Empty)
+	err := c.cc.Invoke(ctx, AuthenticationService_ResendActivationEmail_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,6 +96,7 @@ func (c *authenticationServiceClient) UpdatePassword(ctx context.Context, in *Ch
 // for forward compatibility
 type AuthenticationServiceServer interface {
 	RegisterUser(context.Context, *RegisterUserRequest) (*User, error)
+	ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*common.Empty, error)
 	ActivateUser(context.Context, *ActivateUserRequest) (*UserIdResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*UserIdResponse, error)
 	UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error)
@@ -97,6 +109,9 @@ type UnimplementedAuthenticationServiceServer struct {
 
 func (UnimplementedAuthenticationServiceServer) RegisterUser(context.Context, *RegisterUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterUser not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*common.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendActivationEmail not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*UserIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateUser not implemented")
@@ -134,6 +149,24 @@ func _AuthenticationService_RegisterUser_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthenticationServiceServer).RegisterUser(ctx, req.(*RegisterUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_ResendActivationEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendActivationEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).ResendActivationEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_ResendActivationEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).ResendActivationEmail(ctx, req.(*ResendActivationEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -202,6 +235,10 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterUser",
 			Handler:    _AuthenticationService_RegisterUser_Handler,
+		},
+		{
+			MethodName: "ResendActivationEmail",
+			Handler:    _AuthenticationService_ResendActivationEmail_Handler,
 		},
 		{
 			MethodName: "ActivateUser",

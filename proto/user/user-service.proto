@@ -17,6 +17,7 @@ option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/user;servera
 
 service AuthenticationService{ // https://cloud.google.com/apis/design/naming_convention#interface_names
   rpc RegisterUser(RegisterUserRequest) returns (User);
+  rpc ResendActivationEmail(ResendActivationEmailRequest) returns (common.Empty);
   rpc ActivateUser(ActivateUserRequest) returns (UserIdResponse);
   rpc LoginUser(LoginUserRequest) returns (UserIdResponse);
   rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
@@ -80,7 +81,7 @@ message ListSubscriptionsResponse{
 // ------------------ Requests ------------------ //
 
 message ListUsersRequest{
-  repeated string user_ids = 1;
+    repeated string user_ids = 1;
 }
 
 message RegisterUserRequest{
@@ -88,6 +89,10 @@ message RegisterUserRequest{
   string password = 2;
   string nickname = 3;
   string email = 4;
+}
+
+message ResendActivationEmailRequest{
+  string username = 1;
 }
 
 message ActivateUserRequest{
@@ -101,8 +106,10 @@ message LoginUserRequest{
 }
 
 message GetUserRequest{
-  string user_id = 1;
-  string username = 2;
+  oneof user_request{
+    string user_id = 1;
+    string username = 2;
+  }
 }
 
 message SearchUsersRequest{
