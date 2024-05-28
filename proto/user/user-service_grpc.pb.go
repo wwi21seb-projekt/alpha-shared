@@ -31,8 +31,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
 	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error)
-	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*User, error)
-	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*User, error)
+	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*UserIdResponse, error)
+	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*UserIdResponse, error)
 	UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error)
 }
 
@@ -53,8 +53,8 @@ func (c *authenticationServiceClient) RegisterUser(ctx context.Context, in *Regi
 	return out, nil
 }
 
-func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*UserIdResponse, error) {
+	out := new(UserIdResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_ActivateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -62,8 +62,8 @@ func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *Acti
 	return out, nil
 }
 
-func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*UserIdResponse, error) {
+	out := new(UserIdResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_LoginUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -85,8 +85,8 @@ func (c *authenticationServiceClient) UpdatePassword(ctx context.Context, in *Ch
 // for forward compatibility
 type AuthenticationServiceServer interface {
 	RegisterUser(context.Context, *RegisterUserRequest) (*User, error)
-	ActivateUser(context.Context, *ActivateUserRequest) (*User, error)
-	LoginUser(context.Context, *LoginUserRequest) (*User, error)
+	ActivateUser(context.Context, *ActivateUserRequest) (*UserIdResponse, error)
+	LoginUser(context.Context, *LoginUserRequest) (*UserIdResponse, error)
 	UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
@@ -98,10 +98,10 @@ type UnimplementedAuthenticationServiceServer struct {
 func (UnimplementedAuthenticationServiceServer) RegisterUser(context.Context, *RegisterUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*User, error) {
+func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*UserIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *LoginUserRequest) (*User, error) {
+func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *LoginUserRequest) (*UserIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error) {
@@ -233,7 +233,7 @@ const (
 type UserServiceClient interface {
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
-	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error)
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 }
 
@@ -263,8 +263,8 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserReques
 	return out, nil
 }
 
-func (c *userServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
-	out := new(ListUsersResponse)
+func (c *userServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error) {
+	out := new(SearchUsersResponse)
 	err := c.cc.Invoke(ctx, UserService_SearchUsers_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -287,7 +287,7 @@ func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest,
 type UserServiceServer interface {
 	GetUser(context.Context, *GetUserRequest) (*User, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*User, error)
-	SearchUsers(context.Context, *SearchUsersRequest) (*ListUsersResponse, error)
+	SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -302,7 +302,7 @@ func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) 
 func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedUserServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*ListUsersResponse, error) {
+func (UnimplementedUserServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
 }
 func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {

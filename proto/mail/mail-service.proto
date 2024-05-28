@@ -3,7 +3,6 @@ syntax = "proto3";
 package serveralpha.mail;
 
 import "common/common.proto";
-import "user/user-service.proto";
 
 option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/mail;serveralpha";
 
@@ -21,15 +20,22 @@ enum TokenMailType {
     TOKENMAILTYPE_PASSWORD_RESET = 1;
 }
 
+// ------------------ Messages ------------------ //
+
+message UserInformation {
+    string username = 1;
+    string email = 2;
+}
+
 // ------------------ Requests ------------------ //
 
 message TokenMailRequest {
-    user.User user = 1;
+    UserInformation user = 1;
     string token = 2;
     TokenMailType type = 3;
 }
 
 message ConfirmationMailRequest {
-    user.User user = 1;
+    UserInformation user = 1;
 }
 

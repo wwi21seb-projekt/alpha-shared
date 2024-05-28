@@ -17,15 +17,15 @@ option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/user;servera
 
 service AuthenticationService{ // https://cloud.google.com/apis/design/naming_convention#interface_names
   rpc RegisterUser(RegisterUserRequest) returns (User);
-  rpc ActivateUser(ActivateUserRequest) returns (User);
-  rpc LoginUser(LoginUserRequest) returns (User);
+  rpc ActivateUser(ActivateUserRequest) returns (UserIdResponse);
+  rpc LoginUser(LoginUserRequest) returns (UserIdResponse);
   rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
 }
 
 service UserService{
   rpc GetUser(GetUserRequest) returns (User);
   rpc UpdateUser(UpdateUserRequest) returns (User);
-  rpc SearchUsers(SearchUsersRequest) returns (ListUsersResponse);
+  rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
 }
 
@@ -49,6 +49,10 @@ message User{
   string nickname = 2;
   string email = 3;
   string profile_picture_url = 4;
+}
+
+message UserIdResponse{
+  string user_id = 1;
 }
 
 message SearchUsersResponse{
@@ -88,6 +92,7 @@ message RegisterUserRequest{
 
 message ActivateUserRequest{
   string token = 1;
+  string username = 2;
 }
 
 message LoginUserRequest{
