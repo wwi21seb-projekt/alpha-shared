@@ -33,8 +33,8 @@ const (
 type AuthenticationServiceClient interface {
 	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error)
 	ResendActivationEmail(ctx context.Context, in *ResendActivationEmailRequest, opts ...grpc.CallOption) (*common.Empty, error)
-	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*UsernameResponse, error)
-	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*UsernameResponse, error)
+	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*common.Empty, error)
+	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*common.Empty, error)
 	UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error)
 }
 
@@ -64,8 +64,8 @@ func (c *authenticationServiceClient) ResendActivationEmail(ctx context.Context,
 	return out, nil
 }
 
-func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*UsernameResponse, error) {
-	out := new(UsernameResponse)
+func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+	out := new(common.Empty)
 	err := c.cc.Invoke(ctx, AuthenticationService_ActivateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -73,8 +73,8 @@ func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *Acti
 	return out, nil
 }
 
-func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*UsernameResponse, error) {
-	out := new(UsernameResponse)
+func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+	out := new(common.Empty)
 	err := c.cc.Invoke(ctx, AuthenticationService_LoginUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -97,8 +97,8 @@ func (c *authenticationServiceClient) UpdatePassword(ctx context.Context, in *Ch
 type AuthenticationServiceServer interface {
 	RegisterUser(context.Context, *RegisterUserRequest) (*User, error)
 	ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*common.Empty, error)
-	ActivateUser(context.Context, *ActivateUserRequest) (*UsernameResponse, error)
-	LoginUser(context.Context, *LoginUserRequest) (*UsernameResponse, error)
+	ActivateUser(context.Context, *ActivateUserRequest) (*common.Empty, error)
+	LoginUser(context.Context, *LoginUserRequest) (*common.Empty, error)
 	UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
@@ -113,10 +113,10 @@ func (UnimplementedAuthenticationServiceServer) RegisterUser(context.Context, *R
 func (UnimplementedAuthenticationServiceServer) ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*common.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendActivationEmail not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*UsernameResponse, error) {
+func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*common.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *LoginUserRequest) (*UsernameResponse, error) {
+func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *LoginUserRequest) (*common.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error) {
