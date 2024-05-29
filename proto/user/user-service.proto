@@ -18,13 +18,12 @@ option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/user;servera
 service AuthenticationService{ // https://cloud.google.com/apis/design/naming_convention#interface_names
   rpc RegisterUser(RegisterUserRequest) returns (User);
   rpc ResendActivationEmail(ResendActivationEmailRequest) returns (common.Empty);
-  rpc ActivateUser(ActivateUserRequest) returns (UserIdResponse);
-  rpc LoginUser(LoginUserRequest) returns (UserIdResponse);
+  rpc ActivateUser(ActivateUserRequest) returns (UsernameResponse);
+  rpc LoginUser(LoginUserRequest) returns (UsernameResponse);
   rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
 }
 
 service UserService{
-  rpc GetAuthor(GetUserRequest) returns (User);
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
   rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
@@ -53,8 +52,8 @@ message User{
   string profile_picture_url = 4;
 }
 
-message UserIdResponse{
-  string user_id = 1;
+message UsernameResponse{
+  string username = 1;
 }
 
 message GetUserResponse{
@@ -74,12 +73,12 @@ message UpdateUserResponse {
 }
 
 message SearchUsersResponse{
-  repeated User profiles = 1;
+  repeated User users = 1;
   common.Pagination pagination = 2;
 }
 
 message ListUsersResponse{
-  repeated User profiles = 1;
+  repeated User users = 1;
 }
 
 message CreateSubscriptionResponse{
@@ -105,7 +104,7 @@ message ListSubscriptionsResponse{
 // ------------------ Requests ------------------ //
 
 message ListUsersRequest{
-    repeated string user_ids = 1;
+    repeated string usernames = 1;
 }
 
 message RegisterUserRequest{
@@ -130,10 +129,7 @@ message LoginUserRequest{
 }
 
 message GetUserRequest{
-  oneof user_request{
-    string user_id = 1;
-    string username = 2;
-  }
+  string username = 1;
 }
 
 message SearchUsersRequest{
