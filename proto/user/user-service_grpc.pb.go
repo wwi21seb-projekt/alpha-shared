@@ -37,7 +37,7 @@ type AuthenticationServiceClient interface {
 	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*common.Empty, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*common.Empty, error)
 	UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error)
-	ResetPassword(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
+	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -93,7 +93,7 @@ func (c *authenticationServiceClient) UpdatePassword(ctx context.Context, in *Ch
 	return out, nil
 }
 
-func (c *authenticationServiceClient) ResetPassword(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
+func (c *authenticationServiceClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
 	out := new(ResetPasswordResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_ResetPassword_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -111,7 +111,7 @@ type AuthenticationServiceServer interface {
 	ActivateUser(context.Context, *ActivateUserRequest) (*common.Empty, error)
 	LoginUser(context.Context, *LoginUserRequest) (*common.Empty, error)
 	UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error)
-	ResetPassword(context.Context, *common.Empty) (*ResetPasswordResponse, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -134,7 +134,7 @@ func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *Logi
 func (UnimplementedAuthenticationServiceServer) UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) ResetPassword(context.Context, *common.Empty) (*ResetPasswordResponse, error) {
+func (UnimplementedAuthenticationServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
@@ -241,7 +241,7 @@ func _AuthenticationService_UpdatePassword_Handler(srv interface{}, ctx context.
 }
 
 func _AuthenticationService_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(common.Empty)
+	in := new(ResetPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -253,7 +253,7 @@ func _AuthenticationService_ResetPassword_Handler(srv interface{}, ctx context.C
 		FullMethod: AuthenticationService_ResetPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).ResetPassword(ctx, req.(*common.Empty))
+		return srv.(AuthenticationServiceServer).ResetPassword(ctx, req.(*ResetPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
