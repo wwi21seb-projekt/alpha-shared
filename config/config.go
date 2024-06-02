@@ -18,6 +18,7 @@ type AlphaConfig struct {
 	PostServiceURL         string
 	MailServiceURL         string
 	NotificationServiceURL string
+	ChatServiceURL         string
 }
 
 // LoadConfig loads environment variables into an AlphaConfig struct
@@ -34,6 +35,7 @@ func LoadConfig() (*AlphaConfig, error) {
 		PostServiceURL:         getEnv("POST_SERVICE_URL", "http://localhost:50052"),
 		MailServiceURL:         getEnv("MAIL_SERVICE_URL", "http://localhost:50053"),
 		NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", "http://localhost:50054"),
+		ChatServiceURL:         getEnv("CHAT_SERVICE_URL", "http://localhost:50055"),
 	}
 
 	// Add any necessary validation here

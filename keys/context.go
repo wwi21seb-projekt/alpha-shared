@@ -16,6 +16,8 @@ const (
 	ClaimsKey Key = "claims"
 	// TokenKey is the key used to store the jwt token in the context
 	TokenKey Key = "token"
+	// ChatIDKey is the key used to store the chat id in the context
+	ChatIDKey Key = "chat_id"
 )
 
 // ----------------- Context Functions -----------------
