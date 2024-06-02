@@ -21,7 +21,7 @@ service AuthenticationService{ // https://cloud.google.com/apis/design/naming_co
   rpc ActivateUser(ActivateUserRequest) returns (common.Empty);
   rpc LoginUser(LoginUserRequest) returns (common.Empty);
   rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
-  rpc ResetPassword(common.Empty) returns (ResetPasswordResponse);
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
 }
 
 service UserService{
@@ -166,3 +166,6 @@ message DeleteSubscriptionRequest{
   string subscription_id = 1;
 }
 
+message ResetPasswordRequest{
+  string username = 1;
+}
