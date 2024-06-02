@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package serveralpha.chat;
+
+import "common/common.proto";
+import "user/user-service.proto";
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/chat;serveralpha";
+
+// -------------------------- Messages --------------------------
+
+message ChatMessage {
+    string username = 1;
+    string message = 2;
+    string created_at = 3;
+}
+
+message Chat {
+    string id = 1;
+    user.User user = 2;
+}   
+
+// -------------------------- Services --------------------------
+
+service ChatService {
+    rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+    rpc GetChat(GetChatRequest) returns (GetChatResponse);
+    rpc ListChats(common.Empty) returns (ListChatsResponse);
+    rpc PrepareChatStream(PrepareChatStreamRequest) returns (common.Empty);
+    rpc ChatStream(stream ChatMessage) returns (stream ChatMessage);
+}
+
+// -------------------------- Requests and Responses --------------------------
+
+message CreateChatRequest {
+    string username = 1;
+    string message = 2;
+}
+
+message CreateChatResponse {
+    string chat_id = 1;
+    ChatMessage message = 2;
+}
+
+message GetChatRequest {
+    string chat_id = 1;
+    common.PaginationRequest pagination = 2;
+}
+
+message GetChatResponse {
+    repeated ChatMessage messages = 1;
+    common.Pagination pagination = 2;
+}
+
+message ListChatsResponse {
+    repeated Chat chats = 1;
+}
+
+message PrepareChatStreamRequest {
+    string chat_id = 1;
+}
