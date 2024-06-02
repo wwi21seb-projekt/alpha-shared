@@ -21,6 +21,7 @@ service AuthenticationService{ // https://cloud.google.com/apis/design/naming_co
   rpc ActivateUser(ActivateUserRequest) returns (common.Empty);
   rpc LoginUser(LoginUserRequest) returns (common.Empty);
   rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
+  rpc ResetPassword(common.Empty) returns (ResetPasswordResponse);
 }
 
 service UserService{
@@ -101,6 +102,10 @@ message ListSubscriptionsResponse{
   common.Pagination pagination = 2;
 }
 
+message ResetPasswordResponse{
+  string email = 1;
+}
+
 // ------------------ Requests ------------------ //
 
 message ListUsersRequest{
@@ -160,3 +165,4 @@ message CreateSubscriptionRequest{
 message DeleteSubscriptionRequest{
   string subscription_id = 1;
 }
+
