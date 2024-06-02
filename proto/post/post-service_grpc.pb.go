@@ -262,7 +262,6 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 const (
 	FeedService_GetGlobalFeed_FullMethodName   = "/serveralpha.post.FeedService/GetGlobalFeed"
 	FeedService_GetPersonalFeed_FullMethodName = "/serveralpha.post.FeedService/GetPersonalFeed"
-	FeedService_GetUserFeed_FullMethodName     = "/serveralpha.post.FeedService/GetUserFeed"
 )
 
 // FeedServiceClient is the client API for FeedService service.
@@ -271,7 +270,6 @@ const (
 type FeedServiceClient interface {
 	GetGlobalFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*SearchPostsResponse, error)
 	GetPersonalFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*SearchPostsResponse, error)
-	GetUserFeed(ctx context.Context, in *GetUserFeedRequest, opts ...grpc.CallOption) (*SearchPostsResponse, error)
 }
 
 type feedServiceClient struct {
@@ -300,22 +298,12 @@ func (c *feedServiceClient) GetPersonalFeed(ctx context.Context, in *GetFeedRequ
 	return out, nil
 }
 
-func (c *feedServiceClient) GetUserFeed(ctx context.Context, in *GetUserFeedRequest, opts ...grpc.CallOption) (*SearchPostsResponse, error) {
-	out := new(SearchPostsResponse)
-	err := c.cc.Invoke(ctx, FeedService_GetUserFeed_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // FeedServiceServer is the server API for FeedService service.
 // All implementations must embed UnimplementedFeedServiceServer
 // for forward compatibility
 type FeedServiceServer interface {
 	GetGlobalFeed(context.Context, *GetFeedRequest) (*SearchPostsResponse, error)
 	GetPersonalFeed(context.Context, *GetFeedRequest) (*SearchPostsResponse, error)
-	GetUserFeed(context.Context, *GetUserFeedRequest) (*SearchPostsResponse, error)
 	mustEmbedUnimplementedFeedServiceServer()
 }
 
@@ -328,9 +316,6 @@ func (UnimplementedFeedServiceServer) GetGlobalFeed(context.Context, *GetFeedReq
 }
 func (UnimplementedFeedServiceServer) GetPersonalFeed(context.Context, *GetFeedRequest) (*SearchPostsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPersonalFeed not implemented")
-}
-func (UnimplementedFeedServiceServer) GetUserFeed(context.Context, *GetUserFeedRequest) (*SearchPostsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserFeed not implemented")
 }
 func (UnimplementedFeedServiceServer) mustEmbedUnimplementedFeedServiceServer() {}
 
@@ -381,24 +366,6 @@ func _FeedService_GetPersonalFeed_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FeedService_GetUserFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserFeedRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FeedServiceServer).GetUserFeed(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: FeedService_GetUserFeed_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FeedServiceServer).GetUserFeed(ctx, req.(*GetUserFeedRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // FeedService_ServiceDesc is the grpc.ServiceDesc for FeedService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -413,10 +380,6 @@ var FeedService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPersonalFeed",
 			Handler:    _FeedService_GetPersonalFeed_Handler,
-		},
-		{
-			MethodName: "GetUserFeed",
-			Handler:    _FeedService_GetUserFeed_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
