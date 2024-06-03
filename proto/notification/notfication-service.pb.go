@@ -2,7 +2,11 @@
 // versions:
 // 	protoc-gen-go v1.34.1
 // 	protoc        v5.26.1
+
 // source: notification/notfication-service.proto
+
+// source: notfication/notfication-service.proto
+
 
 package serveralpha
 
@@ -52,11 +56,13 @@ func (x PushSubscriptionType) String() string {
 }
 
 func (PushSubscriptionType) Descriptor() protoreflect.EnumDescriptor {
+
 	return file_notification_notfication_service_proto_enumTypes[0].Descriptor()
 }
 
 func (PushSubscriptionType) Type() protoreflect.EnumType {
 	return &file_notification_notfication_service_proto_enumTypes[0]
+
 }
 
 func (x PushSubscriptionType) Number() protoreflect.EnumNumber {
@@ -65,7 +71,9 @@ func (x PushSubscriptionType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PushSubscriptionType.Descriptor instead.
 func (PushSubscriptionType) EnumDescriptor() ([]byte, []int) {
+
 	return file_notification_notfication_service_proto_rawDescGZIP(), []int{0}
+
 }
 
 type NotificationType int32
@@ -98,11 +106,13 @@ func (x NotificationType) String() string {
 }
 
 func (NotificationType) Descriptor() protoreflect.EnumDescriptor {
+
 	return file_notification_notfication_service_proto_enumTypes[1].Descriptor()
 }
 
 func (NotificationType) Type() protoreflect.EnumType {
 	return &file_notification_notfication_service_proto_enumTypes[1]
+
 }
 
 func (x NotificationType) Number() protoreflect.EnumNumber {
@@ -125,6 +135,7 @@ type PublicKeyResponse struct {
 func (x *PublicKeyResponse) Reset() {
 	*x = PublicKeyResponse{}
 	if protoimpl.UnsafeEnabled {
+
 		mi := &file_notification_notfication_service_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
@@ -138,6 +149,7 @@ func (x *PublicKeyResponse) String() string {
 func (*PublicKeyResponse) ProtoMessage() {}
 
 func (x *PublicKeyResponse) ProtoReflect() protoreflect.Message {
+
 	mi := &file_notification_notfication_service_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -151,7 +163,9 @@ func (x *PublicKeyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PublicKeyResponse.ProtoReflect.Descriptor instead.
 func (*PublicKeyResponse) Descriptor() ([]byte, []int) {
+
 	return file_notification_notfication_service_proto_rawDescGZIP(), []int{0}
+
 }
 
 func (x *PublicKeyResponse) GetPublicKey() string {
@@ -177,6 +191,7 @@ type CreatePushSubscriptionRequest struct {
 func (x *CreatePushSubscriptionRequest) Reset() {
 	*x = CreatePushSubscriptionRequest{}
 	if protoimpl.UnsafeEnabled {
+
 		mi := &file_notification_notfication_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
@@ -203,6 +218,7 @@ func (x *CreatePushSubscriptionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePushSubscriptionRequest.ProtoReflect.Descriptor instead.
 func (*CreatePushSubscriptionRequest) Descriptor() ([]byte, []int) {
+
 	return file_notification_notfication_service_proto_rawDescGZIP(), []int{1}
 }
 
@@ -259,6 +275,7 @@ type CreatePushSubscriptionResponse struct {
 func (x *CreatePushSubscriptionResponse) Reset() {
 	*x = CreatePushSubscriptionResponse{}
 	if protoimpl.UnsafeEnabled {
+
 		mi := &file_notification_notfication_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
@@ -285,6 +302,7 @@ func (x *CreatePushSubscriptionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePushSubscriptionResponse.ProtoReflect.Descriptor instead.
 func (*CreatePushSubscriptionResponse) Descriptor() ([]byte, []int) {
+
 	return file_notification_notfication_service_proto_rawDescGZIP(), []int{2}
 }
 
@@ -294,6 +312,7 @@ func (x *CreatePushSubscriptionResponse) GetSubscriptionId() string {
 	}
 	return ""
 }
+
 
 type GetNotification struct {
 	state         protoimpl.MessageState
@@ -306,6 +325,7 @@ type GetNotification struct {
 	User            *user.User       `protobuf:"bytes,4,opt,name=user,proto3" json:"user,omitempty"`
 }
 
+
 func (x *GetNotification) Reset() {
 	*x = GetNotification{}
 	if protoimpl.UnsafeEnabled {
@@ -314,6 +334,7 @@ func (x *GetNotification) Reset() {
 		ms.StoreMessageInfo(mi)
 	}
 }
+
 
 func (x *GetNotification) String() string {
 	return protoimpl.X.MessageStringOf(x)
@@ -332,6 +353,7 @@ func (x *GetNotification) ProtoReflect() protoreflect.Message {
 	}
 	return mi.MessageOf(x)
 }
+
 
 // Deprecated: Use GetNotification.ProtoReflect.Descriptor instead.
 func (*GetNotification) Descriptor() ([]byte, []int) {
@@ -352,12 +374,14 @@ func (x *GetNotification) GetTimestamp() string {
 	return ""
 }
 
+
 func (x *GetNotification) GetNotficationType() NotificationType {
 	if x != nil {
 		return x.NotficationType
 	}
 	return NotificationType_FOLLOW
 }
+
 
 func (x *GetNotification) GetUser() *user.User {
 	if x != nil {
@@ -636,6 +660,7 @@ func file_notification_notfication_service_proto_init() {
 				return nil
 			}
 		}
+
 		file_notification_notfication_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CreatePushSubscriptionResponse); i {
 			case 0:
@@ -648,6 +673,7 @@ func file_notification_notfication_service_proto_init() {
 				return nil
 			}
 		}
+
 		file_notification_notfication_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetNotification); i {
 			case 0:

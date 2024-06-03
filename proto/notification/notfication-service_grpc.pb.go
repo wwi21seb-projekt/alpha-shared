@@ -4,6 +4,7 @@
 // - protoc             v5.26.1
 // source: notification/notfication-service.proto
 
+
 package serveralpha
 
 import (
@@ -146,6 +147,7 @@ var PushService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "notification/notfication-service.proto",
+
 }
 
 const (
@@ -275,4 +277,5 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "notification/notfication-service.proto",
+
 }

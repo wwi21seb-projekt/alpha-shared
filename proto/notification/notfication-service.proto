@@ -43,6 +43,7 @@ message GetNotification{
     user.User user = 4;
 }
 
+
 message GetNotificationsResponse{
     repeated GetNotification notifications = 1;
 }
