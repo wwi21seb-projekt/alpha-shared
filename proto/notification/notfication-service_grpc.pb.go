@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.26.1
-// source: notfication/notfication-service.proto
+// source: notification/notfication-service.proto
 
 package serveralpha
 
@@ -145,7 +145,7 @@ var PushService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "notfication/notfication-service.proto",
+	Metadata: "notification/notfication-service.proto",
 }
 
 const (
@@ -274,5 +274,5 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "notfication/notfication-service.proto",
+	Metadata: "notification/notfication-service.proto",
 }
