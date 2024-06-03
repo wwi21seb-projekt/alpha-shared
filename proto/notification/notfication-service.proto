@@ -36,11 +36,15 @@ message CreatePushSubscriptionResponse{
     string subscription_id = 1;
 }
 
-message GetNotificationsResponse{
+message GetNotification{
     string notification_id = 1;
     string timestamp = 2;
     NotificationType notfication_type = 3;
     user.User user = 4;
+}
+
+message GetNotificationsResponse{
+    repeated GetNotification notifications = 1;
 }
 
 message DeleteNotificationRequest{
