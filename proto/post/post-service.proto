@@ -22,7 +22,7 @@ message Post{
   string creation_date = 3;
   string content = 4;
   uint32 likes = 5;
-  uint32 liked = 6;
+  bool liked = 6;
   Post repost = 7;
   Location location = 8;
 }
@@ -51,8 +51,8 @@ service FeedService{
 }
 
 service InteractionService{
-  rpc LikePost(LikePostRequest) returns (Post);
-  rpc UnlikePost(UnlikePostRequest) returns (Post);
+  rpc LikePost(LikePostRequest) returns (common.Empty);
+  rpc UnlikePost(UnlikePostRequest) returns (common.Empty);
   rpc CreateComment(CreateCommentRequest) returns (Comment);
   rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse);
 }
