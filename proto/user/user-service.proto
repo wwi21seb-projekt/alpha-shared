@@ -22,6 +22,7 @@ service AuthenticationService{ // https://cloud.google.com/apis/design/naming_co
   rpc LoginUser(LoginUserRequest) returns (common.Empty);
   rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc SetPassword(SetPasswordRequest) returns (common.Empty);
 }
 
 service UserService{
