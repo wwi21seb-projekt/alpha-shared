@@ -1,28 +1,29 @@
+
 syntax = "proto3";
-
+ 
 package serveralpha.notification;
-
+ 
 import "common/common.proto";
 import "user/user-service.proto";
-
+ 
 option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/notification;serveralpha";
-
+ 
 // ------------------ Messages ------------------ //
-
+ 
 message PublicKeyResponse{
     string public_key = 1;
 }
-
+ 
 enum PushSubscriptionType{
     WEB = 0;
     EXPO = 1;
 }
-
+ 
 enum NotificationType {
     FOLLOW = 0;
     REPOST = 1;
 }
-
+ 
 message CreatePushSubscriptionRequest{
     string endpoint = 1;
     string p256dh = 2;
@@ -30,36 +31,38 @@ message CreatePushSubscriptionRequest{
     PushSubscriptionType type = 4;
     string token = 5;
     string expirationTime = 6;
-
+ 
 }
 message CreatePushSubscriptionResponse{
     string subscription_id = 1;
 }
-
-message GetNotification{
+ 
+message GetNotificationsResponse{
     string notification_id = 1;
     string timestamp = 2;
     NotificationType notfication_type = 3;
     user.User user = 4;
 }
-
-message GetNotificationsResponse{
-    repeated GetNotification notifications = 1;
-}
-
+ 
 message DeleteNotificationRequest{
     string notification_id = 1;
 }
-
-
+ 
+message SendNotificationRequest{
+    string NotificationType = 1;
+    string sender = 2;
+}
+ 
+ 
 // ------------------ Notification Service ------------------ //
-
+ 
 service PushService{
     rpc GetPublicKey(common.Empty) returns (PublicKeyResponse);
     rpc CreatePushSubscription(CreatePushSubscriptionRequest) returns (CreatePushSubscriptionResponse);
 }
-
+ 
 service NotificationService{
    rpc GetNotifications(common.Empty) returns (GetNotificationsResponse);
    rpc DeleteNotification(DeleteNotificationRequest) returns (common.Empty);
+   rpc SendNotification(SendNotificationRequest) returns (common.Empty);
 }
