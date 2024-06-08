@@ -45,7 +45,6 @@ func (db *DB) Commit(ctx context.Context, tx pgx.Tx) error {
 
 // Rollback rolls back the transaction
 func (db *DB) Rollback(ctx context.Context, tx pgx.Tx) error {
-	log.Info("Rolling back transaction...")
 	err := tx.Rollback(ctx)
 
 	// Ignore the error if the transaction was already committed
@@ -53,5 +52,7 @@ func (db *DB) Rollback(ctx context.Context, tx pgx.Tx) error {
 		return nil
 	}
 
+	// Log late, so the consumer doesn't get a log for noops (when the transaction was already committed)
+	log.Info("Rolling back transaction...")
 	return err
 }

@@ -19,7 +19,19 @@ const (
 	ExpiryKey Key = "exp"
 	// IssuedAtKey is the key used to store the issued at claim in the context
 	IssuedAtKey Key = "iat"
+	// IsRefreshTokenKey is the key used to store the is refresh token claim in the context
+	IsRefreshTokenKey Key = "irf"
 )
+
+// IsRefreshToken returns true if the token is a refresh token.
+func IsRefreshToken(ctx context.Context) bool {
+	irf, err := GetClaim(ctx, IsRefreshTokenKey)
+	if err != nil {
+		return false
+	}
+
+	return irf == "true"
+}
 
 // GetClaim retrieves the claim from the context using the provided key.
 func GetClaim(ctx context.Context, key Key) (string, error) {

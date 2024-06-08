@@ -295,6 +295,7 @@ func (x *CreatePushSubscriptionResponse) GetSubscriptionId() string {
 	return ""
 }
 
+
 type GetNotificationsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -333,6 +334,7 @@ func (x *GetNotificationsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
+
 // Deprecated: Use GetNotificationsResponse.ProtoReflect.Descriptor instead.
 func (*GetNotificationsResponse) Descriptor() ([]byte, []int) {
 	return file_notification_notfication_service_proto_rawDescGZIP(), []int{3}
@@ -345,6 +347,7 @@ func (x *GetNotificationsResponse) GetNotificationId() string {
 	return ""
 }
 
+
 func (x *GetNotificationsResponse) GetTimestamp() string {
 	if x != nil {
 		return x.Timestamp
@@ -352,12 +355,14 @@ func (x *GetNotificationsResponse) GetTimestamp() string {
 	return ""
 }
 
+
 func (x *GetNotificationsResponse) GetNotficationType() NotificationType {
 	if x != nil {
 		return x.NotficationType
 	}
 	return NotificationType_FOLLOW
 }
+
 
 func (x *GetNotificationsResponse) GetUser() *user.User {
 	if x != nil {
@@ -371,6 +376,7 @@ type DeleteNotificationRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+
 	NotificationId string `protobuf:"bytes,1,opt,name=notification_id,json=notificationId,proto3" json:"notification_id,omitempty"`
 }
 
@@ -382,6 +388,7 @@ func (x *DeleteNotificationRequest) Reset() {
 		ms.StoreMessageInfo(mi)
 	}
 }
+
 
 func (x *DeleteNotificationRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
@@ -401,6 +408,7 @@ func (x *DeleteNotificationRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
+
 // Deprecated: Use DeleteNotificationRequest.ProtoReflect.Descriptor instead.
 func (*DeleteNotificationRequest) Descriptor() ([]byte, []int) {
 	return file_notification_notfication_service_proto_rawDescGZIP(), []int{4}
@@ -417,6 +425,7 @@ type SendNotificationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
 
 	NotificationType string `protobuf:"bytes,1,opt,name=NotificationType,proto3" json:"NotificationType,omitempty"`
 	Sender           string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
@@ -676,6 +685,7 @@ func file_notification_notfication_service_proto_init() {
 			}
 		}
 		file_notification_notfication_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+
 			switch v := v.(*DeleteNotificationRequest); i {
 			case 0:
 				return &v.state
@@ -688,6 +698,7 @@ func file_notification_notfication_service_proto_init() {
 			}
 		}
 		file_notification_notfication_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+
 			switch v := v.(*SendNotificationRequest); i {
 			case 0:
 				return &v.state
