@@ -123,7 +123,7 @@ func NewClientOptions(clMetrics *grpcprom.ClientMetrics, logger *zap.Logger) []g
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithChainUnaryInterceptor(
-			timeout.UnaryClientInterceptor(1*time.Second),
+			timeout.UnaryClientInterceptor(3*time.Second),
 			clMetrics.UnaryClientInterceptor(grpcprom.WithExemplarFromContext(exemplarFromContext)),
 			logging.UnaryClientInterceptor(sharedLogging.InterceptorLogger(logger), loggingOptions()...),
 		),
