@@ -3,9 +3,11 @@ package db
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/wwi21seb-projekt/alpha-shared/config"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -16,8 +18,11 @@ type DB struct {
 
 type TxFunc func(tx pgx.Tx) error
 
-func NewDB(connString string) (*DB, error) {
-	pool, err := pgxpool.New(context.Background(), connString)
+func NewDB(dbCfg config.DatabaseConfig) (*DB, error) {
+	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=disable search_path=%s",
+		dbCfg.PostgresHost, dbCfg.PostgresPort, dbCfg.PostgresDB, dbCfg.PostgresUser, dbCfg.PostgresPassword, dbCfg.SchemaName)
+
+	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
 		return nil, err
 	}

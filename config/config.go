@@ -7,13 +7,23 @@ import (
 
 // AlphaConfig holds all possible configuration values
 type AlphaConfig struct {
-	PostgresHost           string
-	PostgresPort           string
-	PostgresDB             string
-	PostgresUser           string
-	PostgresPassword       string
-	SchemaName             string
-	Port                   string
+	DatabaseConfig   DatabaseConfig
+	ServiceEndpoints ServiceEndpoints
+	JaegerConfig     JaegerConfig
+	Port             string
+	Environment      string
+}
+
+type DatabaseConfig struct {
+	PostgresHost     string
+	PostgresPort     string
+	PostgresDB       string
+	PostgresUser     string
+	PostgresPassword string
+	SchemaName       string
+}
+
+type ServiceEndpoints struct {
 	UserServiceURL         string
 	PostServiceURL         string
 	MailServiceURL         string
@@ -21,21 +31,35 @@ type AlphaConfig struct {
 	ChatServiceURL         string
 }
 
+type JaegerConfig struct {
+	TracesEndpoint string
+	ServiceName    string
+}
+
 // LoadConfig loads environment variables into an AlphaConfig struct
 func LoadConfig() (*AlphaConfig, error) {
 	config := &AlphaConfig{
-		PostgresHost:           getEnv("POSTGRES_HOST", "localhost"),
-		PostgresPort:           getEnv("POSTGRES_PORT", "5432"),
-		PostgresDB:             getEnv("POSTGRES_DB", "mydatabase"),
-		PostgresUser:           getEnv("POSTGRES_USER", "myuser"),
-		PostgresPassword:       getEnv("POSTGRES_PASSWORD", "mypassword"),
-		SchemaName:             getEnv("SCHEMA_NAME", "public"),
-		Port:                   getEnv("PORT", "8080"),
-		UserServiceURL:         getEnv("USER_SERVICE_URL", "http://localhost:50051"),
-		PostServiceURL:         getEnv("POST_SERVICE_URL", "http://localhost:50052"),
-		MailServiceURL:         getEnv("MAIL_SERVICE_URL", "http://localhost:50053"),
-		NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", "http://localhost:50054"),
-		ChatServiceURL:         getEnv("CHAT_SERVICE_URL", "http://localhost:50055"),
+		DatabaseConfig: DatabaseConfig{
+			PostgresHost:     getEnv("POSTGRES_HOST", "localhost"),
+			PostgresPort:     getEnv("POSTGRES_PORT", "5432"),
+			PostgresDB:       getEnv("POSTGRES_DB", "mydatabase"),
+			PostgresUser:     getEnv("POSTGRES_USER", "myuser"),
+			PostgresPassword: getEnv("POSTGRES_PASSWORD", "mypassword"),
+			SchemaName:       getEnv("SCHEMA_NAME", "public"),
+		},
+		ServiceEndpoints: ServiceEndpoints{
+			UserServiceURL:         getEnv("USER_SERVICE_URL", "http://user-service:50051"),
+			PostServiceURL:         getEnv("POST_SERVICE_URL", "http://post-service:50052"),
+			MailServiceURL:         getEnv("MAIL_SERVICE_URL", "http://mail-service:50053"),
+			NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", "http://notification-service:50054"),
+			ChatServiceURL:         getEnv("CHAT_SERVICE_URL", "http://chat-service:50055"),
+		},
+		JaegerConfig: JaegerConfig{
+			TracesEndpoint: getEnv("TRACES_ENDPOINT", "jaeger-collector.observability:4317"),
+			ServiceName:    getEnv("SERVICE_NAME", "alpha"),
+		},
+		Port:        getEnv("PORT", "8080"),
+		Environment: getEnv("ENVIRONMENT", "development"),
 	}
 
 	// Add any necessary validation here
