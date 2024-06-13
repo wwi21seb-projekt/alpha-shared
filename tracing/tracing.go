@@ -15,10 +15,8 @@ import (
 	sharedLogging "github.com/wwi21seb-projekt/alpha-shared/logging"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
@@ -73,20 +71,6 @@ func InitTelemetry(ctx context.Context, name, version string) (func(context.Cont
 
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
-
-	// Create prometheus exporter
-	metricExp, err := otlpmetricgrpc.New(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// Create the metric provider
-	mp := metric.NewMeterProvider(
-		metric.WithReader(metric.NewPeriodicReader(metricExp)),
-		metric.WithResource(res),
-	)
-	shutdownFuncs = append(shutdownFuncs, mp.Shutdown)
-	otel.SetMeterProvider(mp)
 
 	return shutdown, nil
 }
