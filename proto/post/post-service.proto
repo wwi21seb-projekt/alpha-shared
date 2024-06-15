@@ -25,6 +25,7 @@ message Post{
   bool liked = 6;
   Post repost = 7;
   Location location = 8;
+  string picture = 9; // TODO: Add Picture Message Object
 }
 
 message PostPagination{
@@ -62,6 +63,8 @@ service InteractionService{
 message CreatePostRequest{
   string content = 1;
   Location location = 2;
+  string picture = 3;
+  string reposted_post_id = 4;
 }
 
 message SearchPostsRequest{
