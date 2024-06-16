@@ -26,6 +26,7 @@ func InitializeTelemetry(ctx context.Context, name, version string) (func(), err
 	if err != nil {
 		return nil, err
 	}
+
 	traceProvider := tracesdk.NewTracerProvider(
 		tracesdk.WithBatcher(traceExporter),
 		tracesdk.WithResource(res),
