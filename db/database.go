@@ -18,11 +18,11 @@ type DB struct {
 
 type TxFunc func(tx pgx.Tx) error
 
-func NewDB(dbCfg config.DatabaseConfig) (*DB, error) {
+func NewDB(ctx context.Context, dbCfg config.DatabaseConfig) (*DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=disable search_path=%s",
 		dbCfg.PostgresHost, dbCfg.PostgresPort, dbCfg.PostgresDB, dbCfg.PostgresUser, dbCfg.PostgresPassword, dbCfg.SchemaName)
 
-	pool, err := pgxpool.New(context.Background(), dsn)
+	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
 		return nil, err
 	}

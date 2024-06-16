@@ -10,14 +10,23 @@ import (
 	"go.uber.org/zap"
 )
 
-func GetZapLogger() *zap.SugaredLogger {
+func InitializeLogger(serviceName string) (*zap.SugaredLogger, func()) {
 	var logger *zap.SugaredLogger
 	if os.Getenv("ENVIRONMENT") == "production" {
 		logger = zap.Must(zap.NewProduction()).Sugar()
 	} else {
 		logger = zap.Must(zap.NewDevelopment()).Sugar()
 	}
-	return logger
+
+	logger = logger.With(zap.String("service", serviceName))
+
+	cleanup := func() {
+		if err := logger.Sync(); err != nil {
+			logger.Fatal("Failed to sync logger", zap.Error(err)) // TODO: remove fatal from non main functions
+		}
+	}
+
+	return logger, cleanup
 }
 
 // InterceptorLogger adapts zap logger to interceptor logger.
