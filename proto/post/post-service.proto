@@ -11,21 +11,21 @@ option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/post;servera
 // ------------------ Messages ------------------ //
 
 message Location{
-  float latitude = 1;
-  float longitude = 2;
-  int32 accuracy = 3;
+  optional float latitude = 1;
+  optional float longitude = 2;
+  optional int32 accuracy = 3;
 }
 
 message Post{
   string post_id = 1;
-  user.User author = 2;
+  user.PublicUser author = 2;
   string creation_date = 3;
   string content = 4;
   uint32 likes = 5;
   bool liked = 6;
-  Post repost = 7;
-  Location location = 8;
-  string picture = 9; // TODO: Add Picture Message Object
+  optional Post repost = 7;
+  optional Location location = 8;
+  optional string picture = 9; // TODO: Add Picture Message Object
 }
 
 message PostPagination{
@@ -62,9 +62,9 @@ service InteractionService{
 
 message CreatePostRequest{
   string content = 1;
-  Location location = 2;
-  string picture = 3;
-  string reposted_post_id = 4;
+  optional Location location = 2;
+  optional string picture = 3;
+  optional string reposted_post_id = 4;
 }
 
 message SearchPostsRequest{
@@ -78,11 +78,11 @@ message SearchPostsResponse{
 }
 
 message ListPostsRequest{
-  string author = 1;        // Posts authored by the user
-  string liked_by = 2;      // Posts liked by the user
-  string commented_by = 3;  // Posts commented by the user
-  string hashtag = 4;
-  PostPagination pagination = 5;
+  optional string author = 1;        // Posts authored by the user
+  optional string liked_by = 2;      // Posts liked by the user
+  optional string commented_by = 3;  // Posts commented by the user
+  optional string hashtag = 4;
+  optional PostPagination pagination = 5;
 }
 
 message GetPostRequest{

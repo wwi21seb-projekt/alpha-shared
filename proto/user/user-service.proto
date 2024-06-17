@@ -54,6 +54,12 @@ message User{
   string profile_picture_url = 4;
 }
 
+message PublicUser{
+  string username = 1;
+  string nickname = 2;
+  string profile_picture_url = 3;
+}
+
 message UsernameResponse{
   string username = 1;
 }
@@ -75,12 +81,13 @@ message UpdateUserResponse {
 }
 
 message SearchUsersResponse{
-  repeated User users = 1;
+  repeated PublicUser users = 1;
   common.Pagination pagination = 2;
 }
 
 message ListUsersResponse{
-  repeated User users = 1;
+  repeated PublicUser users = 1;
+  common.Pagination pagination = 2;
 }
 
 message CreateSubscriptionResponse{
