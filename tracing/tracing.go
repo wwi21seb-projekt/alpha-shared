@@ -12,8 +12,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// InitializeTelemetry initializes telemetry with OpenTelemetry.
-func InitializeTelemetry(ctx context.Context, name, version string) (func(), error) {
+// InitializeTracing initializes telemetry with OpenTelemetry.
+func InitializeTracing(ctx context.Context, name, version string) (func(), error) {
 	// Create a resource
 	res := resource.NewWithAttributes(
 		semconv.SchemaURL,
