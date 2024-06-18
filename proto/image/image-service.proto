@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package serveralpha.image;
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/image;serveralpha";
+
+// -------------------------- Messages --------------------------
+
+message Image {
+    string url = 1;
+    int32 width = 2;
+    int32 height = 3;
+}  
+
+message Images {
+    repeated Image images = 1;
+}
+
+// -------------------------- Services --------------------------
+
+service ImageService {
+    rpc UploadImage(UploadImageRequest) returns (Image);
+    rpc GetImage(GetImageRequest) returns (Image);
+    rpc ListImages(ListImagesRequest) returns (Images);
+}
+
+// -------------------------- Requests --------------------------
+
+message UploadImageRequest {
+    string image = 1; // base64 encoded image
+}
+
+message GetImageRequest {
+    string url = 1;
+}
+
+message ListImagesRequest {
+    repeated string urls = 1;
+}
+
