@@ -47,23 +47,17 @@ enum SubscriptionType{
 
 // ------------------ Messages ------------------ //
 
-message Picture{
-  string url = 1;
-  int32 width = 2;
-  int32 height = 3;
-}
-
 message User{
   string username = 1;
   string nickname = 2;
   string email = 3;
-  Picture picture = 4;
+  common.Picture picture = 4;
 }
 
 message PublicUser{
   string username = 1;
   string nickname = 2;
-  Picture picture = 3;
+  common.Picture picture = 3;
 }
 
 message UsernameResponse{
@@ -74,7 +68,7 @@ message GetUserResponse{
   string username = 1;
   string nickname = 2;
   string status = 3;
-  Picture picture = 4;
+  common.Picture picture = 4;
   int32 follower_count = 5;
   int32 following_count = 6;
   int32 post_count = 7;
@@ -108,7 +102,7 @@ message Subscription{
   string followed_subscription_id = 2; // populated when the current user follows the other user
   string username = 3; // the username of the other user
   string nickname = 4; // the nickname of the other user
-  Picture picture = 5; // the picture of the other user
+  common.Picture picture = 5; // the picture of the other user
 }
 
 message ListSubscriptionsResponse{
@@ -131,6 +125,7 @@ message RegisterUserRequest{
   string password = 2;
   string nickname = 3;
   string email = 4;
+  string base64_picture = 5;
 }
 
 message ResendActivationEmailRequest{
@@ -159,6 +154,9 @@ message SearchUsersRequest{
 message UpdateUserRequest{
   string nickname = 1;
   string status = 2;
+  // if the user wants to update the picture, the base64_picture field must be set
+  // if it's not set, the picture will be deleted. if it's set to an empty string, the picture will not be changed
+  optional string base64_picture = 3;
 }
 
 message ChangePasswordRequest{

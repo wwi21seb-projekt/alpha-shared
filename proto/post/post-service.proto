@@ -25,7 +25,7 @@ message Post{
   bool liked = 6;
   optional Post repost = 7;
   optional Location location = 8;
-  optional string picture = 9; // TODO: Add Picture Message Object
+  optional common.Picture picture = 9;
 }
 
 message PostPagination{
@@ -65,6 +65,7 @@ message CreatePostRequest{
   optional Location location = 2;
   optional string picture = 3;
   optional string reposted_post_id = 4;
+  optional string base64_picture = 5;
 }
 
 message SearchPostsRequest{

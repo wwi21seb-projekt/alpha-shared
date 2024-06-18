@@ -16,3 +16,9 @@ message PaginationRequest{
     int32 offset = 1;
     int32 limit = 2;
 }
+
+message Picture{
+    string url = 1;
+    int32 width = 2;
+    int32 height = 3;
+  }

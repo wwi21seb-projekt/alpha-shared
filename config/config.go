@@ -2,9 +2,10 @@ package config
 
 import (
 	"fmt"
+	"os"
+
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"os"
 
 	sharedGRPC "github.com/wwi21seb-projekt/alpha-shared/grpc"
 )
@@ -34,6 +35,7 @@ type ServiceEndpoints struct {
 	MailServiceURL         string
 	NotificationServiceURL string
 	ChatServiceURL         string
+	ImageServiceURL        string
 }
 
 type JaegerConfig struct {
@@ -47,6 +49,7 @@ type GRPCClients struct {
 	MailService         grpc.ClientConnInterface
 	NotificationService grpc.ClientConnInterface
 	ChatService         grpc.ClientConnInterface
+	ImageService        grpc.ClientConnInterface
 }
 
 // LoadConfig loads environment variables into an AlphaConfig struct
@@ -61,11 +64,14 @@ func LoadConfig() (*AlphaConfig, error) {
 			SchemaName:       getEnv("SCHEMA_NAME", "public"),
 		},
 		ServiceEndpoints: ServiceEndpoints{
-			UserServiceURL:         getEnv("USER_SERVICE_URL", "http://user-service:50051"),
-			PostServiceURL:         getEnv("POST_SERVICE_URL", "http://post-service:50052"),
-			MailServiceURL:         getEnv("MAIL_SERVICE_URL", "http://mail-service:50053"),
-			NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", "http://notification-service:50054"),
-			ChatServiceURL:         getEnv("CHAT_SERVICE_URL", "http://chat-service:50055"),
+			// We set the default values to empty strings, so we don't
+			// initialize the clients if the URLs are not provided.
+			UserServiceURL:         getEnv("USER_SERVICE_URL", ""),
+			PostServiceURL:         getEnv("POST_SERVICE_URL", ""),
+			MailServiceURL:         getEnv("MAIL_SERVICE_URL", ""),
+			NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", ""),
+			ChatServiceURL:         getEnv("CHAT_SERVICE_URL", ""),
+			ImageServiceURL:        getEnv("IMAGE_SERVICE_URL", ""),
 		},
 		JaegerConfig: JaegerConfig{
 			TracesEndpoint: getEnv("TRACES_ENDPOINT", "jaeger-collector.observability:4317"),
