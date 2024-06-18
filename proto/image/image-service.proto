@@ -7,34 +7,36 @@ option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/image;server
 // -------------------------- Messages --------------------------
 
 message Image {
-    string url = 1;
-    int32 width = 2;
-    int32 height = 3;
-}  
-
-message Images {
-    repeated Image images = 1;
+    string base64image = 1;
+    string imageType = 2;
 }
 
 // -------------------------- Services --------------------------
 
 service ImageService {
-    rpc UploadImage(UploadImageRequest) returns (Image);
+    rpc UploadImage(UploadImageRequest) returns (UploadImageResponse);
     rpc GetImage(GetImageRequest) returns (Image);
-    rpc ListImages(ListImagesRequest) returns (Images);
 }
 
 // -------------------------- Requests --------------------------
 
 message UploadImageRequest {
     string image = 1; // base64 encoded image
+    string context_string = 2; // postId or username for file naming
 }
 
 message GetImageRequest {
-    string url = 1;
+    string imageName = 1;
 }
 
 message ListImagesRequest {
-    repeated string urls = 1;
+    repeated string imageNames = 1;
 }
 
+// -------------------------- Responses --------------------------
+
+message UploadImageResponse {
+    string url = 1;
+    int32 width = 2;
+    int32 height = 3;
+}

@@ -21,16 +21,14 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	ImageService_UploadImage_FullMethodName = "/serveralpha.image.ImageService/UploadImage"
 	ImageService_GetImage_FullMethodName    = "/serveralpha.image.ImageService/GetImage"
-	ImageService_ListImages_FullMethodName  = "/serveralpha.image.ImageService/ListImages"
 )
 
 // ImageServiceClient is the client API for ImageService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ImageServiceClient interface {
-	UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*Image, error)
+	UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageResponse, error)
 	GetImage(ctx context.Context, in *GetImageRequest, opts ...grpc.CallOption) (*Image, error)
-	ListImages(ctx context.Context, in *ListImagesRequest, opts ...grpc.CallOption) (*Images, error)
 }
 
 type imageServiceClient struct {
@@ -41,8 +39,8 @@ func NewImageServiceClient(cc grpc.ClientConnInterface) ImageServiceClient {
 	return &imageServiceClient{cc}
 }
 
-func (c *imageServiceClient) UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*Image, error) {
-	out := new(Image)
+func (c *imageServiceClient) UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageResponse, error) {
+	out := new(UploadImageResponse)
 	err := c.cc.Invoke(ctx, ImageService_UploadImage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -59,22 +57,12 @@ func (c *imageServiceClient) GetImage(ctx context.Context, in *GetImageRequest, 
 	return out, nil
 }
 
-func (c *imageServiceClient) ListImages(ctx context.Context, in *ListImagesRequest, opts ...grpc.CallOption) (*Images, error) {
-	out := new(Images)
-	err := c.cc.Invoke(ctx, ImageService_ListImages_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ImageServiceServer is the server API for ImageService service.
 // All implementations must embed UnimplementedImageServiceServer
 // for forward compatibility
 type ImageServiceServer interface {
-	UploadImage(context.Context, *UploadImageRequest) (*Image, error)
+	UploadImage(context.Context, *UploadImageRequest) (*UploadImageResponse, error)
 	GetImage(context.Context, *GetImageRequest) (*Image, error)
-	ListImages(context.Context, *ListImagesRequest) (*Images, error)
 	mustEmbedUnimplementedImageServiceServer()
 }
 
@@ -82,14 +70,11 @@ type ImageServiceServer interface {
 type UnimplementedImageServiceServer struct {
 }
 
-func (UnimplementedImageServiceServer) UploadImage(context.Context, *UploadImageRequest) (*Image, error) {
+func (UnimplementedImageServiceServer) UploadImage(context.Context, *UploadImageRequest) (*UploadImageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadImage not implemented")
 }
 func (UnimplementedImageServiceServer) GetImage(context.Context, *GetImageRequest) (*Image, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetImage not implemented")
-}
-func (UnimplementedImageServiceServer) ListImages(context.Context, *ListImagesRequest) (*Images, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListImages not implemented")
 }
 func (UnimplementedImageServiceServer) mustEmbedUnimplementedImageServiceServer() {}
 
@@ -140,24 +125,6 @@ func _ImageService_GetImage_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ImageService_ListImages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListImagesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ImageServiceServer).ListImages(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ImageService_ListImages_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImageServiceServer).ListImages(ctx, req.(*ListImagesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // ImageService_ServiceDesc is the grpc.ServiceDesc for ImageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -172,10 +139,6 @@ var ImageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetImage",
 			Handler:    _ImageService_GetImage_Handler,
-		},
-		{
-			MethodName: "ListImages",
-			Handler:    _ImageService_ListImages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
