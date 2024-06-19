@@ -120,6 +120,9 @@ func (cfg *AlphaConfig) InitializeClients(logger *zap.Logger) error {
 	if cfg.GRPCClients.ChatService, err = initializeClient(cfg.ServiceEndpoints.ChatServiceURL, dialOpts); err != nil {
 		return err
 	}
+	if cfg.GRPCClients.ImageService, err = initializeClient(cfg.ServiceEndpoints.ImageServiceURL, dialOpts); err != nil {
+		return err
+	}
 
 	return nil
 }
