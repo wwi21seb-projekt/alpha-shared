@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package serveralpha.chat;
+package server_alpha.chat;
 
-import "common/common.proto";
-import "user/user-service.proto";
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/chat";
 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/chat;serveralpha";
+import "server_alpha/common/common.proto";
+import "server_alpha/user/user.proto";
 
 // -------------------------- Messages --------------------------
 

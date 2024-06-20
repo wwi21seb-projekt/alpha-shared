@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: health/health.proto
+// source: server_alpha/health/health.proto
 
-package serveralpha
+package health
 
 import (
 	context "context"
@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	Health_Check_FullMethodName = "/serveralpha.Health/Check"
-	Health_Watch_FullMethodName = "/serveralpha.Health/Watch"
+	Health_Check_FullMethodName = "/server_alpha.health.Health/Check"
+	Health_Watch_FullMethodName = "/server_alpha.health.Health/Watch"
 )
 
 // HealthClient is the client API for Health service.
@@ -157,7 +157,7 @@ func (x *healthWatchServer) Send(m *HealthCheckResponse) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Health_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.Health",
+	ServiceName: "server_alpha.health.Health",
 	HandlerType: (*HealthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -172,5 +172,5 @@ var Health_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "health/health.proto",
+	Metadata: "server_alpha/health/health.proto",
 }

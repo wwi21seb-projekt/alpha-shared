@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package serveralpha.common;
+package server_alpha.common;
 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/common;serveralpha";
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/common";
 
 message Empty {}
 

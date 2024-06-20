@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package serveralpha.mail;
+package server_alpha.mail;
 
-import "common/common.proto";
+import "server_alpha/common/common.proto";
 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/mail;serveralpha";
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/mail";
 
 // ------------------ Services ------------------ //
 

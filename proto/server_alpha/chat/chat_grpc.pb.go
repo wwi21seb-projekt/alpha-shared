@@ -2,13 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: chat/chat-service.proto
+// source: server_alpha/chat/chat.proto
 
-package serveralpha
+package chat
 
 import (
 	context "context"
-	common "github.com/wwi21seb-projekt/alpha-shared/proto/common"
+	common "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,11 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	ChatService_CreateChat_FullMethodName        = "/serveralpha.chat.ChatService/CreateChat"
-	ChatService_GetChat_FullMethodName           = "/serveralpha.chat.ChatService/GetChat"
-	ChatService_ListChats_FullMethodName         = "/serveralpha.chat.ChatService/ListChats"
-	ChatService_PrepareChatStream_FullMethodName = "/serveralpha.chat.ChatService/PrepareChatStream"
-	ChatService_ChatStream_FullMethodName        = "/serveralpha.chat.ChatService/ChatStream"
+	ChatService_CreateChat_FullMethodName        = "/server_alpha.chat.ChatService/CreateChat"
+	ChatService_GetChat_FullMethodName           = "/server_alpha.chat.ChatService/GetChat"
+	ChatService_ListChats_FullMethodName         = "/server_alpha.chat.ChatService/ListChats"
+	ChatService_PrepareChatStream_FullMethodName = "/server_alpha.chat.ChatService/PrepareChatStream"
+	ChatService_ChatStream_FullMethodName        = "/server_alpha.chat.ChatService/ChatStream"
 )
 
 // ChatServiceClient is the client API for ChatService service.
@@ -264,7 +264,7 @@ func (x *chatServiceChatStreamServer) Recv() (*ChatMessage, error) {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ChatService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.chat.ChatService",
+	ServiceName: "server_alpha.chat.ChatService",
 	HandlerType: (*ChatServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -292,5 +292,5 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "chat/chat-service.proto",
+	Metadata: "server_alpha/chat/chat.proto",
 }

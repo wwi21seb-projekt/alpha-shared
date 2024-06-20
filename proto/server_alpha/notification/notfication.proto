@@ -1,11 +1,11 @@
 syntax = "proto3";
  
-package serveralpha.notification;
+package server_alpha.notification;
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/notification";
  
-import "common/common.proto";
-import "user/user-service.proto";
- 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/notification;serveralpha";
+import "server_alpha/common/common.proto";
+import "server_alpha/user/user.proto";
  
 // ------------------ Messages ------------------ //
  
@@ -29,7 +29,7 @@ message CreatePushSubscriptionRequest{
     string auth = 3;
     PushSubscriptionType type = 4;
     string token = 5;
-    string expirationTime = 6;
+    string expiration_time = 6;
  
 }
 message CreatePushSubscriptionResponse{
@@ -54,7 +54,7 @@ message DeleteNotificationRequest{
 }
  
 message SendNotificationRequest{
-    string NotificationType = 1;
+    string notification_type = 1;
     string recipient = 2;
 }
  

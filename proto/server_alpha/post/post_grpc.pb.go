@@ -2,13 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: post/post-service.proto
+// source: server_alpha/post/post.proto
 
-package serveralpha
+package post
 
 import (
 	context "context"
-	common "github.com/wwi21seb-projekt/alpha-shared/proto/common"
+	common "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,10 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	PostService_ListPosts_FullMethodName  = "/serveralpha.post.PostService/ListPosts"
-	PostService_GetPost_FullMethodName    = "/serveralpha.post.PostService/GetPost"
-	PostService_CreatePost_FullMethodName = "/serveralpha.post.PostService/CreatePost"
-	PostService_DeletePost_FullMethodName = "/serveralpha.post.PostService/DeletePost"
+	PostService_ListPosts_FullMethodName  = "/server_alpha.post.PostService/ListPosts"
+	PostService_GetPost_FullMethodName    = "/server_alpha.post.PostService/GetPost"
+	PostService_CreatePost_FullMethodName = "/server_alpha.post.PostService/CreatePost"
+	PostService_DeletePost_FullMethodName = "/server_alpha.post.PostService/DeletePost"
 )
 
 // PostServiceClient is the client API for PostService service.
@@ -200,7 +200,7 @@ func _PostService_DeletePost_Handler(srv interface{}, ctx context.Context, dec f
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var PostService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.post.PostService",
+	ServiceName: "server_alpha.post.PostService",
 	HandlerType: (*PostServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -221,14 +221,14 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "post/post-service.proto",
+	Metadata: "server_alpha/post/post.proto",
 }
 
 const (
-	InteractionService_LikePost_FullMethodName      = "/serveralpha.post.InteractionService/LikePost"
-	InteractionService_UnlikePost_FullMethodName    = "/serveralpha.post.InteractionService/UnlikePost"
-	InteractionService_CreateComment_FullMethodName = "/serveralpha.post.InteractionService/CreateComment"
-	InteractionService_ListComments_FullMethodName  = "/serveralpha.post.InteractionService/ListComments"
+	InteractionService_LikePost_FullMethodName      = "/server_alpha.post.InteractionService/LikePost"
+	InteractionService_UnlikePost_FullMethodName    = "/server_alpha.post.InteractionService/UnlikePost"
+	InteractionService_CreateComment_FullMethodName = "/server_alpha.post.InteractionService/CreateComment"
+	InteractionService_ListComments_FullMethodName  = "/server_alpha.post.InteractionService/ListComments"
 )
 
 // InteractionServiceClient is the client API for InteractionService service.
@@ -405,7 +405,7 @@ func _InteractionService_ListComments_Handler(srv interface{}, ctx context.Conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var InteractionService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.post.InteractionService",
+	ServiceName: "server_alpha.post.InteractionService",
 	HandlerType: (*InteractionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -426,5 +426,5 @@ var InteractionService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "post/post-service.proto",
+	Metadata: "server_alpha/post/post.proto",
 }
