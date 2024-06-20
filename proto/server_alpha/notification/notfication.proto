@@ -55,7 +55,7 @@ message DeleteNotificationRequest{
  
 message SendNotificationRequest{
     string notification_type = 1;
-    string recipient = 2;
+    string sender = 2;
 }
  
  
