@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/exaring/otelpgx"
-
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/wwi21seb-projekt/alpha-shared/config"
@@ -28,7 +27,7 @@ func NewDB(ctx context.Context, dbCfg config.DatabaseConfig) (*DB, error) {
 		return nil, err
 	}
 
-	cfg.ConnConfig.Tracer = otelpgx.NewTracer(otelpgx.WithIncludeQueryParameters())
+	cfg.ConnConfig.Tracer = otelpgx.NewTracer(otelpgx.WithIncludeQueryParameters(), otelpgx.WithTrimSQLInSpanName())
 
 	pool, err := pgxpool.NewWithConfig(ctx, cfg)
 	if err != nil {
