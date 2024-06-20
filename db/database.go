@@ -27,7 +27,7 @@ func NewDB(ctx context.Context, dbCfg config.DatabaseConfig) (*DB, error) {
 		return nil, err
 	}
 
-	cfg.ConnConfig.Tracer = otelpgx.NewTracer(otelpgx.WithIncludeQueryParameters(), otelpgx.WithTrimSQLInSpanName())
+	cfg.ConnConfig.Tracer = otelpgx.NewTracer(otelpgx.WithTrimSQLInSpanName())
 
 	pool, err := pgxpool.NewWithConfig(ctx, cfg)
 	if err != nil {
