@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: image/image-service.proto
+// source: server_alpha/image/image.proto
 
-package serveralpha
+package image
 
 import (
 	context "context"
@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	ImageService_UploadImage_FullMethodName = "/serveralpha.image.ImageService/UploadImage"
-	ImageService_GetImage_FullMethodName    = "/serveralpha.image.ImageService/GetImage"
+	ImageService_UploadImage_FullMethodName = "/server_alpha.image.ImageService/UploadImage"
+	ImageService_GetImage_FullMethodName    = "/server_alpha.image.ImageService/GetImage"
 )
 
 // ImageServiceClient is the client API for ImageService service.
@@ -131,7 +131,7 @@ func _ImageService_GetImage_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ImageService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.image.ImageService",
+	ServiceName: "server_alpha.image.ImageService",
 	HandlerType: (*ImageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -144,5 +144,5 @@ var ImageService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "image/image-service.proto",
+	Metadata: "server_alpha/image/image.proto",
 }

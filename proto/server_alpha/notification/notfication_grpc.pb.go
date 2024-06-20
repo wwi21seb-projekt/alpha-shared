@@ -2,13 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: notification/notfication-service.proto
+// source: server_alpha/notification/notfication.proto
 
-package serveralpha
+package notification
 
 import (
 	context "context"
-	common "github.com/wwi21seb-projekt/alpha-shared/proto/common"
+	common "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,8 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	PushService_GetPublicKey_FullMethodName           = "/serveralpha.notification.PushService/GetPublicKey"
-	PushService_CreatePushSubscription_FullMethodName = "/serveralpha.notification.PushService/CreatePushSubscription"
+	PushService_GetPublicKey_FullMethodName           = "/server_alpha.notification.PushService/GetPublicKey"
+	PushService_CreatePushSubscription_FullMethodName = "/server_alpha.notification.PushService/CreatePushSubscription"
 )
 
 // PushServiceClient is the client API for PushService service.
@@ -132,7 +132,7 @@ func _PushService_CreatePushSubscription_Handler(srv interface{}, ctx context.Co
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var PushService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.notification.PushService",
+	ServiceName: "server_alpha.notification.PushService",
 	HandlerType: (*PushServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -145,13 +145,13 @@ var PushService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "notification/notfication-service.proto",
+	Metadata: "server_alpha/notification/notfication.proto",
 }
 
 const (
-	NotificationService_GetNotifications_FullMethodName   = "/serveralpha.notification.NotificationService/GetNotifications"
-	NotificationService_DeleteNotification_FullMethodName = "/serveralpha.notification.NotificationService/DeleteNotification"
-	NotificationService_SendNotification_FullMethodName   = "/serveralpha.notification.NotificationService/SendNotification"
+	NotificationService_GetNotifications_FullMethodName   = "/server_alpha.notification.NotificationService/GetNotifications"
+	NotificationService_DeleteNotification_FullMethodName = "/server_alpha.notification.NotificationService/DeleteNotification"
+	NotificationService_SendNotification_FullMethodName   = "/server_alpha.notification.NotificationService/SendNotification"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -295,7 +295,7 @@ func _NotificationService_SendNotification_Handler(srv interface{}, ctx context.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var NotificationService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.notification.NotificationService",
+	ServiceName: "server_alpha.notification.NotificationService",
 	HandlerType: (*NotificationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -312,5 +312,5 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "notification/notfication-service.proto",
+	Metadata: "server_alpha/notification/notfication.proto",
 }

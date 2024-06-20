@@ -2,13 +2,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: user/user-service.proto
+// source: server_alpha/user/user.proto
 
-package serveralpha
+package user
 
 import (
 	context "context"
-	common "github.com/wwi21seb-projekt/alpha-shared/proto/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,26 +19,26 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	AuthenticationService_RegisterUser_FullMethodName          = "/serveralpha.user.AuthenticationService/RegisterUser"
-	AuthenticationService_ResendActivationEmail_FullMethodName = "/serveralpha.user.AuthenticationService/ResendActivationEmail"
-	AuthenticationService_ActivateUser_FullMethodName          = "/serveralpha.user.AuthenticationService/ActivateUser"
-	AuthenticationService_LoginUser_FullMethodName             = "/serveralpha.user.AuthenticationService/LoginUser"
-	AuthenticationService_UpdatePassword_FullMethodName        = "/serveralpha.user.AuthenticationService/UpdatePassword"
-	AuthenticationService_ResetPassword_FullMethodName         = "/serveralpha.user.AuthenticationService/ResetPassword"
-	AuthenticationService_SetPassword_FullMethodName           = "/serveralpha.user.AuthenticationService/SetPassword"
+	AuthenticationService_RegisterUser_FullMethodName          = "/server_alpha.user.AuthenticationService/RegisterUser"
+	AuthenticationService_ResendActivationEmail_FullMethodName = "/server_alpha.user.AuthenticationService/ResendActivationEmail"
+	AuthenticationService_ActivateUser_FullMethodName          = "/server_alpha.user.AuthenticationService/ActivateUser"
+	AuthenticationService_LoginUser_FullMethodName             = "/server_alpha.user.AuthenticationService/LoginUser"
+	AuthenticationService_UpdatePassword_FullMethodName        = "/server_alpha.user.AuthenticationService/UpdatePassword"
+	AuthenticationService_ResetPassword_FullMethodName         = "/server_alpha.user.AuthenticationService/ResetPassword"
+	AuthenticationService_SetPassword_FullMethodName           = "/server_alpha.user.AuthenticationService/SetPassword"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
-	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error)
-	ResendActivationEmail(ctx context.Context, in *ResendActivationEmailRequest, opts ...grpc.CallOption) (*common.Empty, error)
-	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*common.Empty, error)
-	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*common.Empty, error)
-	UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error)
+	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*RegisterUserResponse, error)
+	ResendActivationEmail(ctx context.Context, in *ResendActivationEmailRequest, opts ...grpc.CallOption) (*ResendActivationEmailResponse, error)
+	ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*ActivateUserResponse, error)
+	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
+	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error)
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
-	SetPassword(ctx context.Context, in *SetPasswordRequest, opts ...grpc.CallOption) (*common.Empty, error)
+	SetPassword(ctx context.Context, in *SetPasswordRequest, opts ...grpc.CallOption) (*SetPasswordResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -50,9 +49,9 @@ func NewAuthenticationServiceClient(cc grpc.ClientConnInterface) AuthenticationS
 	return &authenticationServiceClient{cc}
 }
 
-func (c *authenticationServiceClient) RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*User, error) {
+func (c *authenticationServiceClient) RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*RegisterUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(User)
+	out := new(RegisterUserResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_RegisterUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -60,9 +59,9 @@ func (c *authenticationServiceClient) RegisterUser(ctx context.Context, in *Regi
 	return out, nil
 }
 
-func (c *authenticationServiceClient) ResendActivationEmail(ctx context.Context, in *ResendActivationEmailRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+func (c *authenticationServiceClient) ResendActivationEmail(ctx context.Context, in *ResendActivationEmailRequest, opts ...grpc.CallOption) (*ResendActivationEmailResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(common.Empty)
+	out := new(ResendActivationEmailResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_ResendActivationEmail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -70,9 +69,9 @@ func (c *authenticationServiceClient) ResendActivationEmail(ctx context.Context,
 	return out, nil
 }
 
-func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *ActivateUserRequest, opts ...grpc.CallOption) (*ActivateUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(common.Empty)
+	out := new(ActivateUserResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_ActivateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -80,9 +79,9 @@ func (c *authenticationServiceClient) ActivateUser(ctx context.Context, in *Acti
 	return out, nil
 }
 
-func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(common.Empty)
+	out := new(LoginUserResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_LoginUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -90,9 +89,9 @@ func (c *authenticationServiceClient) LoginUser(ctx context.Context, in *LoginUs
 	return out, nil
 }
 
-func (c *authenticationServiceClient) UpdatePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+func (c *authenticationServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(common.Empty)
+	out := new(UpdatePasswordResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_UpdatePassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -110,9 +109,9 @@ func (c *authenticationServiceClient) ResetPassword(ctx context.Context, in *Res
 	return out, nil
 }
 
-func (c *authenticationServiceClient) SetPassword(ctx context.Context, in *SetPasswordRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+func (c *authenticationServiceClient) SetPassword(ctx context.Context, in *SetPasswordRequest, opts ...grpc.CallOption) (*SetPasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(common.Empty)
+	out := new(SetPasswordResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_SetPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -124,13 +123,13 @@ func (c *authenticationServiceClient) SetPassword(ctx context.Context, in *SetPa
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility
 type AuthenticationServiceServer interface {
-	RegisterUser(context.Context, *RegisterUserRequest) (*User, error)
-	ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*common.Empty, error)
-	ActivateUser(context.Context, *ActivateUserRequest) (*common.Empty, error)
-	LoginUser(context.Context, *LoginUserRequest) (*common.Empty, error)
-	UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error)
+	RegisterUser(context.Context, *RegisterUserRequest) (*RegisterUserResponse, error)
+	ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*ResendActivationEmailResponse, error)
+	ActivateUser(context.Context, *ActivateUserRequest) (*ActivateUserResponse, error)
+	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
-	SetPassword(context.Context, *SetPasswordRequest) (*common.Empty, error)
+	SetPassword(context.Context, *SetPasswordRequest) (*SetPasswordResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -138,25 +137,25 @@ type AuthenticationServiceServer interface {
 type UnimplementedAuthenticationServiceServer struct {
 }
 
-func (UnimplementedAuthenticationServiceServer) RegisterUser(context.Context, *RegisterUserRequest) (*User, error) {
+func (UnimplementedAuthenticationServiceServer) RegisterUser(context.Context, *RegisterUserRequest) (*RegisterUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*common.Empty, error) {
+func (UnimplementedAuthenticationServiceServer) ResendActivationEmail(context.Context, *ResendActivationEmailRequest) (*ResendActivationEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendActivationEmail not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*common.Empty, error) {
+func (UnimplementedAuthenticationServiceServer) ActivateUser(context.Context, *ActivateUserRequest) (*ActivateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *LoginUserRequest) (*common.Empty, error) {
+func (UnimplementedAuthenticationServiceServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) UpdatePassword(context.Context, *ChangePasswordRequest) (*common.Empty, error) {
+func (UnimplementedAuthenticationServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) SetPassword(context.Context, *SetPasswordRequest) (*common.Empty, error) {
+func (UnimplementedAuthenticationServiceServer) SetPassword(context.Context, *SetPasswordRequest) (*SetPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPassword not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
@@ -245,7 +244,7 @@ func _AuthenticationService_LoginUser_Handler(srv interface{}, ctx context.Conte
 }
 
 func _AuthenticationService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangePasswordRequest)
+	in := new(UpdatePasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -257,7 +256,7 @@ func _AuthenticationService_UpdatePassword_Handler(srv interface{}, ctx context.
 		FullMethod: AuthenticationService_UpdatePassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).UpdatePassword(ctx, req.(*ChangePasswordRequest))
+		return srv.(AuthenticationServiceServer).UpdatePassword(ctx, req.(*UpdatePasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -302,7 +301,7 @@ func _AuthenticationService_SetPassword_Handler(srv interface{}, ctx context.Con
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.user.AuthenticationService",
+	ServiceName: "server_alpha.user.AuthenticationService",
 	HandlerType: (*AuthenticationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -335,14 +334,14 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user/user-service.proto",
+	Metadata: "server_alpha/user/user.proto",
 }
 
 const (
-	UserService_GetUser_FullMethodName     = "/serveralpha.user.UserService/GetUser"
-	UserService_UpdateUser_FullMethodName  = "/serveralpha.user.UserService/UpdateUser"
-	UserService_SearchUsers_FullMethodName = "/serveralpha.user.UserService/SearchUsers"
-	UserService_ListUsers_FullMethodName   = "/serveralpha.user.UserService/ListUsers"
+	UserService_GetUser_FullMethodName     = "/server_alpha.user.UserService/GetUser"
+	UserService_UpdateUser_FullMethodName  = "/server_alpha.user.UserService/UpdateUser"
+	UserService_SearchUsers_FullMethodName = "/server_alpha.user.UserService/SearchUsers"
+	UserService_ListUsers_FullMethodName   = "/server_alpha.user.UserService/ListUsers"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -519,7 +518,7 @@ func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.user.UserService",
+	ServiceName: "server_alpha.user.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -540,13 +539,13 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user/user-service.proto",
+	Metadata: "server_alpha/user/user.proto",
 }
 
 const (
-	SubscriptionService_ListSubscriptions_FullMethodName  = "/serveralpha.user.SubscriptionService/ListSubscriptions"
-	SubscriptionService_CreateSubscription_FullMethodName = "/serveralpha.user.SubscriptionService/CreateSubscription"
-	SubscriptionService_DeleteSubscription_FullMethodName = "/serveralpha.user.SubscriptionService/DeleteSubscription"
+	SubscriptionService_ListSubscriptions_FullMethodName  = "/server_alpha.user.SubscriptionService/ListSubscriptions"
+	SubscriptionService_CreateSubscription_FullMethodName = "/server_alpha.user.SubscriptionService/CreateSubscription"
+	SubscriptionService_DeleteSubscription_FullMethodName = "/server_alpha.user.SubscriptionService/DeleteSubscription"
 )
 
 // SubscriptionServiceClient is the client API for SubscriptionService service.
@@ -555,7 +554,7 @@ const (
 type SubscriptionServiceClient interface {
 	ListSubscriptions(ctx context.Context, in *ListSubscriptionsRequest, opts ...grpc.CallOption) (*ListSubscriptionsResponse, error)
 	CreateSubscription(ctx context.Context, in *CreateSubscriptionRequest, opts ...grpc.CallOption) (*CreateSubscriptionResponse, error)
-	DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*common.Empty, error)
+	DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*DeleteSubscriptionResponse, error)
 }
 
 type subscriptionServiceClient struct {
@@ -586,9 +585,9 @@ func (c *subscriptionServiceClient) CreateSubscription(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *subscriptionServiceClient) DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*common.Empty, error) {
+func (c *subscriptionServiceClient) DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*DeleteSubscriptionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(common.Empty)
+	out := new(DeleteSubscriptionResponse)
 	err := c.cc.Invoke(ctx, SubscriptionService_DeleteSubscription_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -602,7 +601,7 @@ func (c *subscriptionServiceClient) DeleteSubscription(ctx context.Context, in *
 type SubscriptionServiceServer interface {
 	ListSubscriptions(context.Context, *ListSubscriptionsRequest) (*ListSubscriptionsResponse, error)
 	CreateSubscription(context.Context, *CreateSubscriptionRequest) (*CreateSubscriptionResponse, error)
-	DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*common.Empty, error)
+	DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*DeleteSubscriptionResponse, error)
 	mustEmbedUnimplementedSubscriptionServiceServer()
 }
 
@@ -616,7 +615,7 @@ func (UnimplementedSubscriptionServiceServer) ListSubscriptions(context.Context,
 func (UnimplementedSubscriptionServiceServer) CreateSubscription(context.Context, *CreateSubscriptionRequest) (*CreateSubscriptionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSubscription not implemented")
 }
-func (UnimplementedSubscriptionServiceServer) DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*common.Empty, error) {
+func (UnimplementedSubscriptionServiceServer) DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*DeleteSubscriptionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteSubscription not implemented")
 }
 func (UnimplementedSubscriptionServiceServer) mustEmbedUnimplementedSubscriptionServiceServer() {}
@@ -690,7 +689,7 @@ func _SubscriptionService_DeleteSubscription_Handler(srv interface{}, ctx contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SubscriptionService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.user.SubscriptionService",
+	ServiceName: "server_alpha.user.SubscriptionService",
 	HandlerType: (*SubscriptionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -707,5 +706,5 @@ var SubscriptionService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user/user-service.proto",
+	Metadata: "server_alpha/user/user.proto",
 }

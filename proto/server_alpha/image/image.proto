@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package serveralpha.image;
+package server_alpha.image;
 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/image;serveralpha";
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/image";
 
 // -------------------------- Messages --------------------------
 
 message Image {
     string base64image = 1;
-    string imageType = 2;
+    string image_type = 2;
 }
 
 // -------------------------- Services --------------------------
@@ -26,11 +26,11 @@ message UploadImageRequest {
 }
 
 message GetImageRequest {
-    string imageName = 1;
+    string image_name = 1;
 }
 
 message ListImagesRequest {
-    repeated string imageNames = 1;
+    repeated string image_names = 1;
 }
 
 // -------------------------- Responses --------------------------

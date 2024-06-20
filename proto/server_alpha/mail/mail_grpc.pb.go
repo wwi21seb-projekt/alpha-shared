@@ -2,13 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: mail/mail-service.proto
+// source: server_alpha/mail/mail.proto
 
-package serveralpha
+package mail
 
 import (
 	context "context"
-	common "github.com/wwi21seb-projekt/alpha-shared/proto/common"
+	common "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,8 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	MailService_SendTokenMail_FullMethodName        = "/serveralpha.mail.MailService/SendTokenMail"
-	MailService_SendConfirmationMail_FullMethodName = "/serveralpha.mail.MailService/SendConfirmationMail"
+	MailService_SendTokenMail_FullMethodName        = "/server_alpha.mail.MailService/SendTokenMail"
+	MailService_SendConfirmationMail_FullMethodName = "/server_alpha.mail.MailService/SendConfirmationMail"
 )
 
 // MailServiceClient is the client API for MailService service.
@@ -132,7 +132,7 @@ func _MailService_SendConfirmationMail_Handler(srv interface{}, ctx context.Cont
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var MailService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "serveralpha.mail.MailService",
+	ServiceName: "server_alpha.mail.MailService",
 	HandlerType: (*MailServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -145,5 +145,5 @@ var MailService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "mail/mail-service.proto",
+	Metadata: "server_alpha/mail/mail.proto",
 }

@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package serveralpha.post;
+package server_alpha.post;
 
-import "common/common.proto";
-import "user/user-service.proto";
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/post";
 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/post;serveralpha";
+import "server_alpha/common/common.proto";
+import "server_alpha/user/user.proto";
 
 enum FeedType {
   FEED_TYPE_GLOBAL = 0;

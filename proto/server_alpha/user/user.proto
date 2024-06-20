@@ -1,70 +1,60 @@
 syntax = "proto3";
 
-package serveralpha.user;
+package server_alpha.user;
 
-import "common/common.proto";
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/user";
 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/user;serveralpha";
-
-// GUIDELINES
-// https://cloud.google.com/apis/design/standard_methods
-// https://cloud.google.com/apis/design/custom_methods
-// https://cloud.google.com/apis/design/naming_convention#method_names
-// "The method names should follow the naming convention of VerbNoun in upper camel case, where the noun is typically the resource type."
+import "server_alpha/common/common.proto";
 
 // ------------------ Services ------------------ //
 
-
-service AuthenticationService{ // https://cloud.google.com/apis/design/naming_convention#interface_names
-  rpc RegisterUser(RegisterUserRequest) returns (User);
-  rpc ResendActivationEmail(ResendActivationEmailRequest) returns (common.Empty);
-  rpc ActivateUser(ActivateUserRequest) returns (common.Empty);
-  rpc LoginUser(LoginUserRequest) returns (common.Empty);
-  rpc UpdatePassword(ChangePasswordRequest) returns (common.Empty);
+service AuthenticationService {
+  rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
+  rpc ResendActivationEmail(ResendActivationEmailRequest) returns (ResendActivationEmailResponse);
+  rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse);
+  rpc LoginUser(LoginUserRequest) returns (LoginUserResponse);
+  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse);
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
-  rpc SetPassword(SetPasswordRequest) returns (common.Empty);
+  rpc SetPassword(SetPasswordRequest) returns (SetPasswordResponse);
 }
 
-service UserService{
+service UserService {
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
   rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
 }
 
-service SubscriptionService{
+service SubscriptionService {
   rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
   rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
-  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (common.Empty);
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (DeleteSubscriptionResponse);
 }
 
 // ------------------ Enums ------------------ //
 
-enum SubscriptionType{
-  SUBSCRIPTION_TYPE_FOLLOWER = 0; // default by setting to 0
-  SUBSCRIPTION_TYPE_FOLLOWING = 1;
+enum SubscriptionType {
+  SUBSCRIPTION_TYPE_UNSPECIFIED = 0; // default by setting to 0
+  SUBSCRIPTION_TYPE_FOLLOWER = 1;
+  SUBSCRIPTION_TYPE_FOLLOWING = 2;
 }
 
 // ------------------ Messages ------------------ //
 
-message User{
+message User {
   string username = 1;
   string nickname = 2;
   string email = 3;
   common.Picture picture = 4;
 }
 
-message PublicUser{
+message PublicUser {
   string username = 1;
   string nickname = 2;
   common.Picture picture = 3;
 }
 
-message UsernameResponse{
-  string username = 1;
-}
-
-message GetUserResponse{
+message GetUserResponse {
   string username = 1;
   string nickname = 2;
   string status = 3;
@@ -80,24 +70,24 @@ message UpdateUserResponse {
   string status = 2;
 }
 
-message SearchUsersResponse{
+message SearchUsersResponse {
   repeated PublicUser users = 1;
   common.Pagination pagination = 2;
 }
 
-message ListUsersResponse{
+message ListUsersResponse {
   repeated PublicUser users = 1;
   common.Pagination pagination = 2;
 }
 
-message CreateSubscriptionResponse{
+message CreateSubscriptionResponse {
   string subscription_id = 1;
   string subscription_date = 2;
   string follower_username = 3;
   string followed_username = 4;
 }
 
-message Subscription{
+message Subscription {
   string follower_subscription_id = 1; // populated when the other user follows the current user
   string followed_subscription_id = 2; // populated when the current user follows the other user
   string username = 3; // the username of the other user
@@ -105,22 +95,50 @@ message Subscription{
   common.Picture picture = 5; // the picture of the other user
 }
 
-message ListSubscriptionsResponse{
+message ListSubscriptionsResponse {
   repeated Subscription subscriptions = 1;
   common.Pagination pagination = 2;
 }
 
-message ResetPasswordResponse{
+message ResetPasswordResponse {
   string email = 1;
+}
+
+message RegisterUserResponse {
+  User user = 1;
+}
+
+message ResendActivationEmailResponse {
+  string status = 1;
+}
+
+message ActivateUserResponse {
+  string status = 1;
+}
+
+message LoginUserResponse {
+  string status = 1;
+}
+
+message UpdatePasswordResponse {
+  string status = 1;
+}
+
+message SetPasswordResponse {
+  string status = 1;
+}
+
+message DeleteSubscriptionResponse {
+  string status = 1;
 }
 
 // ------------------ Requests ------------------ //
 
-message ListUsersRequest{
-    repeated string usernames = 1;
+message ListUsersRequest {
+  repeated string usernames = 1;
 }
 
-message RegisterUserRequest{
+message RegisterUserRequest {
   string username = 1;
   string password = 2;
   string nickname = 3;
@@ -128,61 +146,60 @@ message RegisterUserRequest{
   string base64_picture = 5;
 }
 
-message ResendActivationEmailRequest{
+message ResendActivationEmailRequest {
   string username = 1;
 }
 
-message ActivateUserRequest{
+message ActivateUserRequest {
   string token = 1;
   string username = 2;
 }
 
-message LoginUserRequest{
+message LoginUserRequest {
   string username = 1;
   string password = 2;
 }
 
-message GetUserRequest{
+message GetUserRequest {
   string username = 1;
 }
 
-message SearchUsersRequest{
+message SearchUsersRequest {
   common.PaginationRequest pagination = 1;
   string query = 2;
 }
 
-message UpdateUserRequest{
+message UpdateUserRequest {
   string nickname = 1;
   string status = 2;
-  // if the user wants to update the picture, the base64_picture field must be set
+  optional string base64_picture = 3; // if the user wants to update the picture, the base64_picture field must be set
   // if it's not set, the picture will be deleted. if it's set to an empty string, the picture will not be changed
-  optional string base64_picture = 3;
 }
 
-message ChangePasswordRequest{
+message UpdatePasswordRequest {
   string old_password = 1;
   string new_password = 2;
 }
 
-message ListSubscriptionsRequest{
+message ListSubscriptionsRequest {
   common.PaginationRequest pagination = 1;
   SubscriptionType subscription_type = 2;
   string username = 3;
 }
 
-message CreateSubscriptionRequest{
+message CreateSubscriptionRequest {
   string followed_username = 1;
 }
 
-message DeleteSubscriptionRequest{
+message DeleteSubscriptionRequest {
   string subscription_id = 1;
 }
 
-message ResetPasswordRequest{
+message ResetPasswordRequest {
   string username = 1;
 }
 
-message SetPasswordRequest{
+message SetPasswordRequest {
   string username = 1;
   string new_password = 2;
   string token = 3;
