@@ -3,6 +3,7 @@ package logging
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap/zapcore"
 	"os"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
@@ -11,22 +12,33 @@ import (
 )
 
 func InitializeLogger(serviceName string) (*zap.SugaredLogger, func()) {
-	var logger *zap.SugaredLogger
+	var config zap.Config
 	if os.Getenv("ENVIRONMENT") == "production" {
-		logger = zap.Must(zap.NewProduction()).Sugar()
+		config = zap.NewProductionConfig()
 	} else {
-		logger = zap.Must(zap.NewDevelopment()).Sugar()
+		config = zap.NewDevelopmentConfig()
+		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	}
 
-	logger = logger.With(zap.String("service", serviceName))
+	// Build the logger from the configuration
+	logger, err := config.Build()
+	if err != nil {
+		// Build a simple logger if the configuration fails
+		logger = zap.NewExample()
+		logger.Error("Failed to build logger from configuration", zap.Error(err))
+	}
 
+	// Create a sugared logger and add service context
+	sugaredLogger := logger.Sugar().With(zap.String("service", serviceName))
+
+	// Cleanup function to flush the logger buffer
 	cleanup := func() {
-		if err := logger.Sync(); err != nil {
-			logger.Fatal("Failed to sync logger", zap.Error(err)) // TODO: remove fatal from non main functions
+		if err = sugaredLogger.Sync(); err != nil {
+			sugaredLogger.Errorf("Failed to sync logger: %v", err)
 		}
 	}
 
-	return logger, cleanup
+	return sugaredLogger, cleanup
 }
 
 // InterceptorLogger adapts zap logger to interceptor logger.
