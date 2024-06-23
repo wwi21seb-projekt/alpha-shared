@@ -9,10 +9,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// grpcPanicRecoveryHandler handles panics and logs the incident.
+// grpcPanicRecoveryHandler handles panics and logs the incident with a stack trace.
 func grpcPanicRecoveryHandler(logger *zap.Logger) recovery.RecoveryHandlerFunc {
 	return func(p any) (err error) {
-		logger.Info("Recovered from panic", zap.Any("panic", p))
+		logger.Error("Recovered from panic", zap.Any("panic", p), zap.Stack("stack"))
 		return status.Errorf(codes.Internal, "Recovered from panic: %v", p)
 	}
 }
