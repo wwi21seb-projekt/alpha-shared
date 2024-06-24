@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package server_alpha.user;
+
+import "server_alpha/common/common.proto";
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/user";
+
+// ------------------ Services ------------------ //
+
+service AuthenticationService {
+    rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
+    rpc ResendActivationEmail(ResendActivationEmailRequest) returns (ResendActivationEmailResponse);
+    rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse);
+    rpc LoginUser(LoginUserRequest) returns (LoginUserResponse);
+    rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse);
+    rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+    rpc SetPassword(SetPasswordRequest) returns (SetPasswordResponse);
+}
+
+// Request messages
+message RegisterUserRequest {
+    string username = 1;
+    string nickname = 2;
+    string email = 3;
+    string password = 4;
+    string image = 5;
+}
+
+message ResendActivationEmailRequest {
+    string username = 1;
+}
+
+message ActivateUserRequest {
+    string username = 1;
+    string activation_code = 2;
+}
+
+message LoginUserRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message UpdatePasswordRequest {
+    string username = 1;
+    string old_password = 2;
+    string new_password = 3;
+}
+
+message ResetPasswordRequest {
+    string username = 1;
+    string email = 2;
+}
+
+message SetPasswordRequest {
+    string username = 1;
+    string new_password = 2;
+    string token = 3;
+}
+
+// Response messages
+message RegisterUserResponse {
+    string username = 1;
+    string nickname = 2;
+    string email = 3;
+    server_alpha.common.Picture image = 4;
+}
+
+message ResendActivationEmailResponse {}
+
+message ActivateUserResponse {}
+
+message LoginUserResponse {}
+
+message UpdatePasswordResponse {}
+
+message ResetPasswordResponse {
+    string email = 1;
+}
+
+message SetPasswordResponse {}

@@ -24,8 +24,6 @@ const _ = connect.IsAtLeastVersion1_13_0
 const (
 	// PostServiceName is the fully-qualified name of the PostService service.
 	PostServiceName = "server_alpha.post.PostService"
-	// InteractionServiceName is the fully-qualified name of the InteractionService service.
-	InteractionServiceName = "server_alpha.post.InteractionService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -44,32 +42,15 @@ const (
 	PostServiceCreatePostProcedure = "/server_alpha.post.PostService/CreatePost"
 	// PostServiceDeletePostProcedure is the fully-qualified name of the PostService's DeletePost RPC.
 	PostServiceDeletePostProcedure = "/server_alpha.post.PostService/DeletePost"
-	// InteractionServiceLikePostProcedure is the fully-qualified name of the InteractionService's
-	// LikePost RPC.
-	InteractionServiceLikePostProcedure = "/server_alpha.post.InteractionService/LikePost"
-	// InteractionServiceUnlikePostProcedure is the fully-qualified name of the InteractionService's
-	// UnlikePost RPC.
-	InteractionServiceUnlikePostProcedure = "/server_alpha.post.InteractionService/UnlikePost"
-	// InteractionServiceCreateCommentProcedure is the fully-qualified name of the InteractionService's
-	// CreateComment RPC.
-	InteractionServiceCreateCommentProcedure = "/server_alpha.post.InteractionService/CreateComment"
-	// InteractionServiceListCommentsProcedure is the fully-qualified name of the InteractionService's
-	// ListComments RPC.
-	InteractionServiceListCommentsProcedure = "/server_alpha.post.InteractionService/ListComments"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	postServiceServiceDescriptor                    = post.File_server_alpha_post_post_proto.Services().ByName("PostService")
-	postServiceListPostsMethodDescriptor            = postServiceServiceDescriptor.Methods().ByName("ListPosts")
-	postServiceGetPostMethodDescriptor              = postServiceServiceDescriptor.Methods().ByName("GetPost")
-	postServiceCreatePostMethodDescriptor           = postServiceServiceDescriptor.Methods().ByName("CreatePost")
-	postServiceDeletePostMethodDescriptor           = postServiceServiceDescriptor.Methods().ByName("DeletePost")
-	interactionServiceServiceDescriptor             = post.File_server_alpha_post_post_proto.Services().ByName("InteractionService")
-	interactionServiceLikePostMethodDescriptor      = interactionServiceServiceDescriptor.Methods().ByName("LikePost")
-	interactionServiceUnlikePostMethodDescriptor    = interactionServiceServiceDescriptor.Methods().ByName("UnlikePost")
-	interactionServiceCreateCommentMethodDescriptor = interactionServiceServiceDescriptor.Methods().ByName("CreateComment")
-	interactionServiceListCommentsMethodDescriptor  = interactionServiceServiceDescriptor.Methods().ByName("ListComments")
+	postServiceServiceDescriptor          = post.File_server_alpha_post_post_proto.Services().ByName("PostService")
+	postServiceListPostsMethodDescriptor  = postServiceServiceDescriptor.Methods().ByName("ListPosts")
+	postServiceGetPostMethodDescriptor    = postServiceServiceDescriptor.Methods().ByName("GetPost")
+	postServiceCreatePostMethodDescriptor = postServiceServiceDescriptor.Methods().ByName("CreatePost")
+	postServiceDeletePostMethodDescriptor = postServiceServiceDescriptor.Methods().ByName("DeletePost")
 )
 
 // PostServiceClient is a client for the server_alpha.post.PostService service.
@@ -216,151 +197,4 @@ func (UnimplementedPostServiceHandler) CreatePost(context.Context, *connect.Requ
 
 func (UnimplementedPostServiceHandler) DeletePost(context.Context, *connect.Request[post.GetPostRequest]) (*connect.Response[common.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("server_alpha.post.PostService.DeletePost is not implemented"))
-}
-
-// InteractionServiceClient is a client for the server_alpha.post.InteractionService service.
-type InteractionServiceClient interface {
-	LikePost(context.Context, *connect.Request[post.LikePostRequest]) (*connect.Response[common.Empty], error)
-	UnlikePost(context.Context, *connect.Request[post.UnlikePostRequest]) (*connect.Response[common.Empty], error)
-	CreateComment(context.Context, *connect.Request[post.CreateCommentRequest]) (*connect.Response[post.Comment], error)
-	ListComments(context.Context, *connect.Request[post.ListCommentsRequest]) (*connect.Response[post.ListCommentsResponse], error)
-}
-
-// NewInteractionServiceClient constructs a client for the server_alpha.post.InteractionService
-// service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
-// gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
-// the connect.WithGRPC() or connect.WithGRPCWeb() options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewInteractionServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) InteractionServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	return &interactionServiceClient{
-		likePost: connect.NewClient[post.LikePostRequest, common.Empty](
-			httpClient,
-			baseURL+InteractionServiceLikePostProcedure,
-			connect.WithSchema(interactionServiceLikePostMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		unlikePost: connect.NewClient[post.UnlikePostRequest, common.Empty](
-			httpClient,
-			baseURL+InteractionServiceUnlikePostProcedure,
-			connect.WithSchema(interactionServiceUnlikePostMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		createComment: connect.NewClient[post.CreateCommentRequest, post.Comment](
-			httpClient,
-			baseURL+InteractionServiceCreateCommentProcedure,
-			connect.WithSchema(interactionServiceCreateCommentMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		listComments: connect.NewClient[post.ListCommentsRequest, post.ListCommentsResponse](
-			httpClient,
-			baseURL+InteractionServiceListCommentsProcedure,
-			connect.WithSchema(interactionServiceListCommentsMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-	}
-}
-
-// interactionServiceClient implements InteractionServiceClient.
-type interactionServiceClient struct {
-	likePost      *connect.Client[post.LikePostRequest, common.Empty]
-	unlikePost    *connect.Client[post.UnlikePostRequest, common.Empty]
-	createComment *connect.Client[post.CreateCommentRequest, post.Comment]
-	listComments  *connect.Client[post.ListCommentsRequest, post.ListCommentsResponse]
-}
-
-// LikePost calls server_alpha.post.InteractionService.LikePost.
-func (c *interactionServiceClient) LikePost(ctx context.Context, req *connect.Request[post.LikePostRequest]) (*connect.Response[common.Empty], error) {
-	return c.likePost.CallUnary(ctx, req)
-}
-
-// UnlikePost calls server_alpha.post.InteractionService.UnlikePost.
-func (c *interactionServiceClient) UnlikePost(ctx context.Context, req *connect.Request[post.UnlikePostRequest]) (*connect.Response[common.Empty], error) {
-	return c.unlikePost.CallUnary(ctx, req)
-}
-
-// CreateComment calls server_alpha.post.InteractionService.CreateComment.
-func (c *interactionServiceClient) CreateComment(ctx context.Context, req *connect.Request[post.CreateCommentRequest]) (*connect.Response[post.Comment], error) {
-	return c.createComment.CallUnary(ctx, req)
-}
-
-// ListComments calls server_alpha.post.InteractionService.ListComments.
-func (c *interactionServiceClient) ListComments(ctx context.Context, req *connect.Request[post.ListCommentsRequest]) (*connect.Response[post.ListCommentsResponse], error) {
-	return c.listComments.CallUnary(ctx, req)
-}
-
-// InteractionServiceHandler is an implementation of the server_alpha.post.InteractionService
-// service.
-type InteractionServiceHandler interface {
-	LikePost(context.Context, *connect.Request[post.LikePostRequest]) (*connect.Response[common.Empty], error)
-	UnlikePost(context.Context, *connect.Request[post.UnlikePostRequest]) (*connect.Response[common.Empty], error)
-	CreateComment(context.Context, *connect.Request[post.CreateCommentRequest]) (*connect.Response[post.Comment], error)
-	ListComments(context.Context, *connect.Request[post.ListCommentsRequest]) (*connect.Response[post.ListCommentsResponse], error)
-}
-
-// NewInteractionServiceHandler builds an HTTP handler from the service implementation. It returns
-// the path on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewInteractionServiceHandler(svc InteractionServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	interactionServiceLikePostHandler := connect.NewUnaryHandler(
-		InteractionServiceLikePostProcedure,
-		svc.LikePost,
-		connect.WithSchema(interactionServiceLikePostMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	interactionServiceUnlikePostHandler := connect.NewUnaryHandler(
-		InteractionServiceUnlikePostProcedure,
-		svc.UnlikePost,
-		connect.WithSchema(interactionServiceUnlikePostMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	interactionServiceCreateCommentHandler := connect.NewUnaryHandler(
-		InteractionServiceCreateCommentProcedure,
-		svc.CreateComment,
-		connect.WithSchema(interactionServiceCreateCommentMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	interactionServiceListCommentsHandler := connect.NewUnaryHandler(
-		InteractionServiceListCommentsProcedure,
-		svc.ListComments,
-		connect.WithSchema(interactionServiceListCommentsMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/server_alpha.post.InteractionService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case InteractionServiceLikePostProcedure:
-			interactionServiceLikePostHandler.ServeHTTP(w, r)
-		case InteractionServiceUnlikePostProcedure:
-			interactionServiceUnlikePostHandler.ServeHTTP(w, r)
-		case InteractionServiceCreateCommentProcedure:
-			interactionServiceCreateCommentHandler.ServeHTTP(w, r)
-		case InteractionServiceListCommentsProcedure:
-			interactionServiceListCommentsHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
-}
-
-// UnimplementedInteractionServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedInteractionServiceHandler struct{}
-
-func (UnimplementedInteractionServiceHandler) LikePost(context.Context, *connect.Request[post.LikePostRequest]) (*connect.Response[common.Empty], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("server_alpha.post.InteractionService.LikePost is not implemented"))
-}
-
-func (UnimplementedInteractionServiceHandler) UnlikePost(context.Context, *connect.Request[post.UnlikePostRequest]) (*connect.Response[common.Empty], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("server_alpha.post.InteractionService.UnlikePost is not implemented"))
-}
-
-func (UnimplementedInteractionServiceHandler) CreateComment(context.Context, *connect.Request[post.CreateCommentRequest]) (*connect.Response[post.Comment], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("server_alpha.post.InteractionService.CreateComment is not implemented"))
-}
-
-func (UnimplementedInteractionServiceHandler) ListComments(context.Context, *connect.Request[post.ListCommentsRequest]) (*connect.Response[post.ListCommentsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("server_alpha.post.InteractionService.ListComments is not implemented"))
 }
