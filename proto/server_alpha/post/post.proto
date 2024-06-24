@@ -7,23 +7,32 @@ option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha
 import "server_alpha/common/common.proto";
 import "server_alpha/user/user.proto";
 
-enum FeedType {
-  FEED_TYPE_GLOBAL = 0;
-  FEED_TYPE_PERSONAL = 1;
-  FEED_TYPE_USER = 2;
+// ------------------ Services ------------------ //
+
+service PostService {
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
+  rpc GetPost(GetPostRequest) returns (GetPostResponse);
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
 }
 
-// ------------------ Messages ------------------ //
+enum FeedType {
+  FEED_TYPE_UNSPECIFIED = 0;
+  FEED_TYPE_GLOBAL = 1;
+  FEED_TYPE_PERSONAL = 2;
+  FEED_TYPE_USER = 3;
+}
 
-message Location{
+// Domain message types
+message Location {
   optional float latitude = 1;
   optional float longitude = 2;
   optional int32 accuracy = 3;
 }
 
-message Post{
+message Post {
   string post_id = 1;
-  user.PublicUser author = 2;
+  user.User author = 2;
   string creation_date = 3;
   string content = 4;
   uint32 likes = 5;
@@ -33,38 +42,15 @@ message Post{
   optional common.Picture picture = 9;
 }
 
-message PostPagination{
+message PostPagination {
   string last_post_id = 1;
   int32 limit = 2;
   int32 records = 3;
 }
 
-message Comment{
-  string comment_id = 1;
-  user.User author = 2;
-  string content = 3;
-  string creation_date = 4;
-}
+// ------------ Request messages ------------ //
 
-// ------------------ Post Service ------------------ //
-
-service PostService{
-  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
-  rpc GetPost(GetPostRequest) returns (Post);
-  rpc CreatePost(CreatePostRequest) returns (Post);
-  rpc DeletePost(GetPostRequest) returns (common.Empty);
-}
-
-service InteractionService{
-  rpc LikePost(LikePostRequest) returns (common.Empty);
-  rpc UnlikePost(UnlikePostRequest) returns (common.Empty);
-  rpc CreateComment(CreateCommentRequest) returns (Comment);
-  rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse);
-}
-
-// ------------------ Request and Response ------------------ //
-
-message CreatePostRequest{
+message CreatePostRequest {
   string content = 1;
   optional Location location = 2;
   optional string picture = 3;
@@ -72,41 +58,37 @@ message CreatePostRequest{
   optional string base64_picture = 5;
 }
 
-message ListPostsRequest{
+message ListPostsRequest {
   optional string hashtag = 1;
   optional string username = 2;
   FeedType feed_type = 3;
   optional PostPagination pagination = 4;
 }
 
-message ListPostsResponse{
+message GetPostRequest {
+  string post_id = 1;
+}
+
+message DeletePostRequest {
+  string post_id = 1;
+}
+
+// ------------ Response messages ------------ //
+
+message ListPostsResponse {
   repeated Post posts = 1;
   PostPagination pagination = 2;
 }
 
-message GetPostRequest{
+message CreatePostResponse {
+  Post post = 1;
+}
+
+message GetPostResponse {
   string post_id = 1;
+  user.User author = 2;
+  string creation_date = 3;
+
 }
 
-message LikePostRequest{
-  string post_id = 1;
-}
-
-message UnlikePostRequest{
-  string post_id = 1;
-}
-
-message CreateCommentRequest{
-  string post_id = 1;
-  string content = 2;
-}
-
-message ListCommentsRequest{
-  common.PaginationRequest pagination = 1;
-  string post_id = 2;
-}
-
-message ListCommentsResponse{
-  repeated Comment comments = 1;
-  common.Pagination pagination = 2;
-}
+message DeletePostResponse {}

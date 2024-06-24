@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package server_alpha.user;
+
+import "server_alpha/common/common.proto";
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/user";
+
+enum SubscriptionType {
+    SUBSCRIPTION_TYPE_UNSPECIFIED = 0; // default by setting to 0
+    SUBSCRIPTION_TYPE_FOLLOWER = 1;
+    SUBSCRIPTION_TYPE_FOLLOWING = 2;
+}
+
+// ------------------ Services ------------------ //
+
+service SubscriptionService {
+    rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+    rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
+    rpc DeleteSubscription(DeleteSubscriptionRequest) returns (DeleteSubscriptionResponse);
+}
+
+message CreateSubscriptionResponse {
+    string subscription_id = 1;
+    string subscription_date = 2;
+    string follower_username = 3;
+    string followed_username = 4;
+}
+
+message Subscription {
+    string follower_subscription_id = 1; // populated when the other user follows the current user
+    string followed_subscription_id = 2; // populated when the current user follows the other user
+    string username = 3; // the username of the other user
+    string nickname = 4; // the nickname of the other user
+    common.Picture picture = 5; // the picture of the other user
+}
+
+message ListSubscriptionsResponse {
+    repeated Subscription subscriptions = 1;
+    common.Pagination pagination = 2;
+}
+
+
+message DeleteSubscriptionResponse {
+    string status = 1;
+}
+
+message ListSubscriptionsRequest {
+    common.PaginationRequest pagination = 1;
+    SubscriptionType subscription_type = 2;
+    string username = 3;
+}
+
+message CreateSubscriptionRequest {
+    string followed_username = 1;
+}
+
+message DeleteSubscriptionRequest {
+    string subscription_id = 1;
+}

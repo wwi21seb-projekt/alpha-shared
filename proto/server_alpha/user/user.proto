@@ -2,21 +2,12 @@ syntax = "proto3";
 
 package server_alpha.user;
 
-option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/user";
-
 import "server_alpha/common/common.proto";
 
-// ------------------ Services ------------------ //
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/user";
 
-service AuthenticationService {
-  rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
-  rpc ResendActivationEmail(ResendActivationEmailRequest) returns (ResendActivationEmailResponse);
-  rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse);
-  rpc LoginUser(LoginUserRequest) returns (LoginUserResponse);
-  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse);
-  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
-  rpc SetPassword(SetPasswordRequest) returns (SetPasswordResponse);
-}
+
+// ------------------ Services ------------------ //
 
 service UserService {
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
@@ -25,34 +16,16 @@ service UserService {
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
 }
 
-service SubscriptionService {
-  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
-  rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
-  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (DeleteSubscriptionResponse);
-}
-
-// ------------------ Enums ------------------ //
-
-enum SubscriptionType {
-  SUBSCRIPTION_TYPE_UNSPECIFIED = 0; // default by setting to 0
-  SUBSCRIPTION_TYPE_FOLLOWER = 1;
-  SUBSCRIPTION_TYPE_FOLLOWING = 2;
-}
-
 // ------------------ Messages ------------------ //
 
+// Domain object for a user (used as a submessage in other messages)
 message User {
   string username = 1;
   string nickname = 2;
-  string email = 3;
   common.Picture picture = 4;
 }
 
-message PublicUser {
-  string username = 1;
-  string nickname = 2;
-  common.Picture picture = 3;
-}
+// ------------------ Responses ------------------ //
 
 message GetUserResponse {
   string username = 1;
@@ -71,93 +44,19 @@ message UpdateUserResponse {
 }
 
 message SearchUsersResponse {
-  repeated PublicUser users = 1;
+  repeated User users = 1;
   common.Pagination pagination = 2;
 }
 
 message ListUsersResponse {
-  repeated PublicUser users = 1;
+  repeated User users = 1;
   common.Pagination pagination = 2;
-}
-
-message CreateSubscriptionResponse {
-  string subscription_id = 1;
-  string subscription_date = 2;
-  string follower_username = 3;
-  string followed_username = 4;
-}
-
-message Subscription {
-  string follower_subscription_id = 1; // populated when the other user follows the current user
-  string followed_subscription_id = 2; // populated when the current user follows the other user
-  string username = 3; // the username of the other user
-  string nickname = 4; // the nickname of the other user
-  common.Picture picture = 5; // the picture of the other user
-}
-
-message ListSubscriptionsResponse {
-  repeated Subscription subscriptions = 1;
-  common.Pagination pagination = 2;
-}
-
-message ResetPasswordResponse {
-  string email = 1;
-}
-
-message RegisterUserResponse {
-  User user = 1;
-}
-
-message ResendActivationEmailResponse {
-  string status = 1;
-}
-
-message ActivateUserResponse {
-  string status = 1;
-}
-
-message LoginUserResponse {
-  string status = 1;
-}
-
-message UpdatePasswordResponse {
-  string status = 1;
-}
-
-message SetPasswordResponse {
-  string status = 1;
-}
-
-message DeleteSubscriptionResponse {
-  string status = 1;
 }
 
 // ------------------ Requests ------------------ //
 
 message ListUsersRequest {
   repeated string usernames = 1;
-}
-
-message RegisterUserRequest {
-  string username = 1;
-  string password = 2;
-  string nickname = 3;
-  string email = 4;
-  string base64_picture = 5;
-}
-
-message ResendActivationEmailRequest {
-  string username = 1;
-}
-
-message ActivateUserRequest {
-  string token = 1;
-  string username = 2;
-}
-
-message LoginUserRequest {
-  string username = 1;
-  string password = 2;
 }
 
 message GetUserRequest {
@@ -174,33 +73,4 @@ message UpdateUserRequest {
   string status = 2;
   optional string base64_picture = 3; // if the user wants to update the picture, the base64_picture field must be set
   // if it's not set, the picture will be deleted. if it's set to an empty string, the picture will not be changed
-}
-
-message UpdatePasswordRequest {
-  string old_password = 1;
-  string new_password = 2;
-}
-
-message ListSubscriptionsRequest {
-  common.PaginationRequest pagination = 1;
-  SubscriptionType subscription_type = 2;
-  string username = 3;
-}
-
-message CreateSubscriptionRequest {
-  string followed_username = 1;
-}
-
-message DeleteSubscriptionRequest {
-  string subscription_id = 1;
-}
-
-message ResetPasswordRequest {
-  string username = 1;
-}
-
-message SetPasswordRequest {
-  string username = 1;
-  string new_password = 2;
-  string token = 3;
 }

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package server_alpha.post;
+
+option go_package = "github.com/wwi21seb-projekt/alpha-shared/proto/server_alpha/post";
+
+import "server_alpha/common/common.proto";
+import "server_alpha/user/user.proto";
+
+// ------------------ Services ------------------ //
+
+service InteractionService{
+    rpc LikePost(LikePostRequest) returns (LikePostResponse);
+    rpc UnlikePost(UnlikePostRequest) returns (UnlikePostResponse);
+    rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse);
+    rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse);
+}
+
+// ------------------ Requests ------------------ //
+
+message LikePostRequest{
+    string post_id = 1;
+}
+
+message UnlikePostRequest{
+    string post_id = 1;
+}
+
+message CreateCommentRequest{
+    string post_id = 1;
+    string content = 2;
+}
+
+message ListCommentsRequest{
+    common.PaginationRequest pagination = 1;
+    string post_id = 2;
+}
+
+// ------------------ Responses ------------------ //
+
+message LikePostResponse{}
+
+message UnlikePostResponse{}
+
+message CreateCommentResponse{
+    string comment_id = 1;
+    user.User author = 2;
+    string content = 3;
+    string creation_date = 4;
+}
+
+message ListCommentsResponse{
+    repeated CreateCommentResponse comments = 1;
+    common.Pagination pagination = 2;
+}
