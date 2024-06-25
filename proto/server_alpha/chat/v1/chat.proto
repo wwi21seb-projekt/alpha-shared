@@ -12,7 +12,7 @@ service ChatService {
     rpc GetChat(GetChatRequest) returns (GetChatResponse);
     rpc ListChats(ListChatsRequest) returns (ListChatsResponse);
     rpc PrepareChatStream(PrepareChatStreamRequest) returns (PrepareChatStreamResponse);
-    rpc ChatStream(stream ChatStreamRequest) returns (stream ChatStreamResponse);
+    rpc ChatMessage(stream ChatMessageRequest) returns (stream ChatMessageResponse);
 }
 
 // --------------- Domain Objects --------------- //
@@ -29,6 +29,11 @@ message CreateChatRequest {
     string message = 2;
 }
 
+message ChatMessageRequest {
+    string username = 1;
+    string message = 2;
+}
+
 message GetChatRequest {
     string chat_id = 1;
     common.v1.PaginationRequest pagination = 2;
@@ -41,20 +46,15 @@ message PrepareChatStreamRequest {
     string chat_id = 1;
 }
 
-message ChatStreamRequest {
-    string chat_id = 1;
-    string message = 2;
-}
-
 // ------------------ Responses ------------------ //
 
 message CreateChatResponse {
     string chat_id = 1;
-    ChatStreamResponse message = 2;
+    ChatMessageResponse message = 2;
 }
 
 message GetChatResponse {
-    repeated ChatStreamResponse messages = 1;
+    repeated ChatMessageResponse messages = 1;
     common.v1.PaginationResponse pagination = 2;
 }
 
@@ -65,7 +65,7 @@ message ListChatsResponse {
 message PrepareChatStreamResponse {}
 
 
-message ChatStreamResponse {
+message ChatMessageResponse {
     string username = 1;
     string message = 2;
     string created_at = 3;

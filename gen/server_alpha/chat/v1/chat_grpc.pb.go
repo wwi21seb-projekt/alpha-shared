@@ -23,7 +23,7 @@ const (
 	ChatService_GetChat_FullMethodName           = "/server_alpha.chat.v1.ChatService/GetChat"
 	ChatService_ListChats_FullMethodName         = "/server_alpha.chat.v1.ChatService/ListChats"
 	ChatService_PrepareChatStream_FullMethodName = "/server_alpha.chat.v1.ChatService/PrepareChatStream"
-	ChatService_ChatStream_FullMethodName        = "/server_alpha.chat.v1.ChatService/ChatStream"
+	ChatService_ChatMessage_FullMethodName       = "/server_alpha.chat.v1.ChatService/ChatMessage"
 )
 
 // ChatServiceClient is the client API for ChatService service.
@@ -34,7 +34,7 @@ type ChatServiceClient interface {
 	GetChat(ctx context.Context, in *GetChatRequest, opts ...grpc.CallOption) (*GetChatResponse, error)
 	ListChats(ctx context.Context, in *ListChatsRequest, opts ...grpc.CallOption) (*ListChatsResponse, error)
 	PrepareChatStream(ctx context.Context, in *PrepareChatStreamRequest, opts ...grpc.CallOption) (*PrepareChatStreamResponse, error)
-	ChatStream(ctx context.Context, opts ...grpc.CallOption) (ChatService_ChatStreamClient, error)
+	ChatMessage(ctx context.Context, opts ...grpc.CallOption) (ChatService_ChatMessageClient, error)
 }
 
 type chatServiceClient struct {
@@ -85,32 +85,32 @@ func (c *chatServiceClient) PrepareChatStream(ctx context.Context, in *PrepareCh
 	return out, nil
 }
 
-func (c *chatServiceClient) ChatStream(ctx context.Context, opts ...grpc.CallOption) (ChatService_ChatStreamClient, error) {
+func (c *chatServiceClient) ChatMessage(ctx context.Context, opts ...grpc.CallOption) (ChatService_ChatMessageClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &ChatService_ServiceDesc.Streams[0], ChatService_ChatStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &ChatService_ServiceDesc.Streams[0], ChatService_ChatMessage_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &chatServiceChatStreamClient{ClientStream: stream}
+	x := &chatServiceChatMessageClient{ClientStream: stream}
 	return x, nil
 }
 
-type ChatService_ChatStreamClient interface {
-	Send(*ChatStreamRequest) error
-	Recv() (*ChatStreamResponse, error)
+type ChatService_ChatMessageClient interface {
+	Send(*ChatMessageRequest) error
+	Recv() (*ChatMessageResponse, error)
 	grpc.ClientStream
 }
 
-type chatServiceChatStreamClient struct {
+type chatServiceChatMessageClient struct {
 	grpc.ClientStream
 }
 
-func (x *chatServiceChatStreamClient) Send(m *ChatStreamRequest) error {
+func (x *chatServiceChatMessageClient) Send(m *ChatMessageRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *chatServiceChatStreamClient) Recv() (*ChatStreamResponse, error) {
-	m := new(ChatStreamResponse)
+func (x *chatServiceChatMessageClient) Recv() (*ChatMessageResponse, error) {
+	m := new(ChatMessageResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ type ChatServiceServer interface {
 	GetChat(context.Context, *GetChatRequest) (*GetChatResponse, error)
 	ListChats(context.Context, *ListChatsRequest) (*ListChatsResponse, error)
 	PrepareChatStream(context.Context, *PrepareChatStreamRequest) (*PrepareChatStreamResponse, error)
-	ChatStream(ChatService_ChatStreamServer) error
+	ChatMessage(ChatService_ChatMessageServer) error
 	mustEmbedUnimplementedChatServiceServer()
 }
 
@@ -145,8 +145,8 @@ func (UnimplementedChatServiceServer) ListChats(context.Context, *ListChatsReque
 func (UnimplementedChatServiceServer) PrepareChatStream(context.Context, *PrepareChatStreamRequest) (*PrepareChatStreamResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PrepareChatStream not implemented")
 }
-func (UnimplementedChatServiceServer) ChatStream(ChatService_ChatStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method ChatStream not implemented")
+func (UnimplementedChatServiceServer) ChatMessage(ChatService_ChatMessageServer) error {
+	return status.Errorf(codes.Unimplemented, "method ChatMessage not implemented")
 }
 func (UnimplementedChatServiceServer) mustEmbedUnimplementedChatServiceServer() {}
 
@@ -233,26 +233,26 @@ func _ChatService_PrepareChatStream_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChatService_ChatStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ChatServiceServer).ChatStream(&chatServiceChatStreamServer{ServerStream: stream})
+func _ChatService_ChatMessage_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ChatServiceServer).ChatMessage(&chatServiceChatMessageServer{ServerStream: stream})
 }
 
-type ChatService_ChatStreamServer interface {
-	Send(*ChatStreamResponse) error
-	Recv() (*ChatStreamRequest, error)
+type ChatService_ChatMessageServer interface {
+	Send(*ChatMessageResponse) error
+	Recv() (*ChatMessageRequest, error)
 	grpc.ServerStream
 }
 
-type chatServiceChatStreamServer struct {
+type chatServiceChatMessageServer struct {
 	grpc.ServerStream
 }
 
-func (x *chatServiceChatStreamServer) Send(m *ChatStreamResponse) error {
+func (x *chatServiceChatMessageServer) Send(m *ChatMessageResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *chatServiceChatStreamServer) Recv() (*ChatStreamRequest, error) {
-	m := new(ChatStreamRequest)
+func (x *chatServiceChatMessageServer) Recv() (*ChatMessageRequest, error) {
+	m := new(ChatMessageRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -285,8 +285,8 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "ChatStream",
-			Handler:       _ChatService_ChatStream_Handler,
+			StreamName:    "ChatMessage",
+			Handler:       _ChatService_ChatMessage_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

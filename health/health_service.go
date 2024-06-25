@@ -2,14 +2,14 @@ package health
 
 import (
 	"context"
-	"github.com/wwi21seb-projekt/alpha-shared/db"
-	"go.uber.org/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/connectivity"
 	"sync"
 	"time"
 
+	"github.com/wwi21seb-projekt/alpha-shared/db"
 	healthv1 "github.com/wwi21seb-projekt/alpha-shared/gen/server_alpha/health/v1"
+	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
 )
 
 type HealthService struct {
@@ -71,21 +71,40 @@ func (hs *HealthService) updateStatus(status healthv1.ServingStatus) {
 // CheckDependencies checks the status of various dependencies and updates the health status accordingly
 func (hs *HealthService) CheckDependencies(ctx context.Context, database *db.DB, grpcClients map[string]*grpc.ClientConn) {
 	go func() {
+		time.Sleep(10 * time.Second) // Initial delay to allow services to start
+
 		for {
+			allClientsHealthy := true
+
 			// Check database connection
 			if err := database.Ping(ctx); err != nil {
 				hs.logger.Warn("Database connection failed")
 				hs.updateStatus(healthv1.ServingStatus_SERVING_STATUS_NOT_SERVING)
-				continue
+				allClientsHealthy = false
 			}
 
 			// Check gRPC client connections
-			allClientsHealthy := true
 			for name, conn := range grpcClients {
-				if conn.GetState() != connectivity.Ready {
-					hs.logger.Warnw("gRPC client connection not ready", "client", name)
+				state := conn.GetState()
+				switch state {
+				case connectivity.Ready, connectivity.Idle:
+					// These states are considered healthy
+					hs.logger.Debugw("gRPC client connection state", "client", name, "state", state.String())
+				case connectivity.Connecting:
+					// Not fully ready but not failed either
+					hs.logger.Infow("gRPC client is connecting", "client", name)
 					allClientsHealthy = false
-					break
+				case connectivity.TransientFailure:
+					// Temporary failure
+					hs.logger.Warnw("gRPC client connection in transient failure", "client", name)
+					allClientsHealthy = false
+				case connectivity.Shutdown:
+					// Not serving
+					hs.logger.Errorw("gRPC client connection shutdown", "client", name)
+					allClientsHealthy = false
+				default:
+					hs.logger.Errorw("Unknown gRPC client connection state", "client", name, "state", state.String())
+					allClientsHealthy = false
 				}
 			}
 
@@ -95,7 +114,7 @@ func (hs *HealthService) CheckDependencies(ctx context.Context, database *db.DB,
 				hs.updateStatus(healthv1.ServingStatus_SERVING_STATUS_NOT_SERVING)
 			}
 
-			time.Sleep(30 * time.Second) // Check every 30 seconds
+			time.Sleep(10 * time.Second) // Check every 10 seconds
 		}
 	}()
 }
