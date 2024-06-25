@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package server_alpha.common.v1;
+
+message PaginationRequest {
+    string page_token = 1; // Can be either an integer offset or a UUID
+    int32 page_size = 2;
+}
+
+message PaginationResponse {
+    string next_page_token = 1; // Can be either an integer offset or a UUID
+    int32 total_size = 2;
+}

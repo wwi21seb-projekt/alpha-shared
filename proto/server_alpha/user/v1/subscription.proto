@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package server_alpha.user.v1;
+
+import "server_alpha/common/v1/common.proto";
+import "server_alpha/image/v1/image.proto";
+
+
+// ------------------ Services ------------------ //
+
+service SubscriptionService {
+  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (DeleteSubscriptionResponse);
+}
+
+// --------------- Domain Objects --------------- //
+
+message Subscription {
+  string follower_subscription_id = 1; // populated when the other user follows the current user
+  string followed_subscription_id = 2; // populated when the current user follows the other user
+  string username = 3; // the username of the other user
+  string nickname = 4; // the nickname of the other user
+  image.v1.Picture picture = 5; // the picture of the other user
+}
+
+// ------------------ Requests ------------------ //
+
+enum SubscriptionType {
+  SUBSCRIPTION_TYPE_UNSPECIFIED = 0; // default by setting to 0
+  SUBSCRIPTION_TYPE_FOLLOWER = 1;
+  SUBSCRIPTION_TYPE_FOLLOWING = 2;
+}
+
+message ListSubscriptionsRequest {
+  common.v1.PaginationRequest pagination = 1;
+  SubscriptionType subscription_type = 2;
+  string username = 3;
+}
+
+message CreateSubscriptionRequest {
+  string followed_username = 1;
+}
+
+message DeleteSubscriptionRequest {
+  string subscription_id = 1;
+}
+
+// ------------------ Responses ------------------ //
+
+message ListSubscriptionsResponse {
+  repeated Subscription subscriptions = 1;
+  common.v1.PaginationResponse pagination = 2;
+}
+
+message CreateSubscriptionResponse {
+  string subscription_id = 1;
+  string subscription_date = 2;
+  string follower_username = 3;
+  string followed_username = 4;
+}
+
+message DeleteSubscriptionResponse {
+  string status = 1;
+}

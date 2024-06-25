@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package server_alpha.image.v1;
+
+
+// ------------------ Services ------------------ //
+
+service ImageService {
+    rpc UploadImage(UploadImageRequest) returns (UploadImageResponse);
+    rpc GetImage(GetImageRequest) returns (GetImageResponse);
+}
+
+// --------------- Domain Objects --------------- //
+
+message Image {
+    string image = 1;
+    string type = 2;
+}
+
+message Picture{
+    string url = 1;
+    int32 width = 2;
+    int32 height = 3;
+}
+
+// ------------------ Requests ------------------ //
+
+message UploadImageRequest {
+    string image = 1; // base64 encoded image
+    string name = 2; // postId or username for file naming
+}
+
+message GetImageRequest {
+    string name = 1;
+}
+
+// -------------------------- Responses --------------------------
+
+message UploadImageResponse {
+    string url = 1;
+    int32 width = 2;
+    int32 height = 3;
+}
+
+message GetImageResponse {
+    string image = 1;
+    string type = 2;
+}
