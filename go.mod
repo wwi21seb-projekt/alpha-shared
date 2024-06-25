@@ -3,10 +3,9 @@ module github.com/wwi21seb-projekt/alpha-shared
 go 1.22.3
 
 require (
-	connectrpc.com/connect v1.16.2
 	github.com/exaring/otelpgx v0.6.1
+	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438
 	github.com/jackc/pgx/v5 v5.6.0
-	github.com/sirupsen/logrus v1.9.3
 	go.opentelemetry.io/otel v1.27.0
 	go.opentelemetry.io/otel/sdk v1.27.0
 	google.golang.org/grpc v1.64.0
