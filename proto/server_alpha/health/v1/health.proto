@@ -11,13 +11,9 @@ service HealthService {
 
 // ------------------ Requests ------------------ //
 
-message CheckRequest {
-  string service = 1;
-}
+message CheckRequest {}
 
-message WatchRequest {
-  string service = 1;
-}
+message WatchRequest {}
 
 // ------------------ Responses ------------------ //
 
