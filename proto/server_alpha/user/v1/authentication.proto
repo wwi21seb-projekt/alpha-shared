@@ -66,7 +66,7 @@ message RegisterUserResponse {
   string username = 1;
   string nickname = 2;
   string email = 3;
-  image.v1.Image image = 4;
+  image.v1.Picture picture = 4;
 }
 
 message ResendActivationEmailResponse {}
