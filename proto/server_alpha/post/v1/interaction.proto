@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package server_alpha.post.v1;
+
+import "server_alpha/common/v1/common.proto";
+import "server_alpha/user/v1/user.proto";
+
+// ------------------ Services ------------------ //
+
+service InteractionService{
+  rpc LikePost(LikePostRequest) returns (LikePostResponse);
+  rpc UnlikePost(UnlikePostRequest) returns (UnlikePostResponse);
+  rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse);
+  rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse);
+}
+
+// ------------------ Requests ------------------ //
+
+message LikePostRequest{
+  string post_id = 1;
+}
+
+message UnlikePostRequest{
+  string post_id = 1;
+}
+
+message CreateCommentRequest{
+  string post_id = 1;
+  string content = 2;
+}
+
+message ListCommentsRequest{
+  common.v1.PaginationRequest pagination = 1;
+  string post_id = 2;
+}
+
+// ------------------ Responses ------------------ //
+
+message LikePostResponse{}
+
+message UnlikePostResponse{}
+
+message CreateCommentResponse{
+  string comment_id = 1;
+  user.v1.User author = 2;
+  string content = 3;
+  string creation_date = 4;
+}
+
+message ListCommentsResponse{
+  repeated CreateCommentResponse comments = 1;
+  common.v1.PaginationResponse pagination = 2;
+}

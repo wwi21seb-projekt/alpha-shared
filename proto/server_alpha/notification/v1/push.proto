@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package server_alpha.notification.v1;
+
+// ------------------ Services ------------------ //
+
+service PushService{
+  rpc GetPublicKey(GetPublicKeyRequest) returns (GetPublicKeyResponse);
+  rpc CreatePushSubscription(CreatePushSubscriptionRequest) returns (CreatePushSubscriptionResponse);
+}
+
+// ------------------ Requests ------------------ //
+
+message GetPublicKeyRequest{}
+
+enum PushSubscriptionType{
+  PUSH_SUBSCRIPTION_TYPE_UNSPECIFIED = 0;
+  PUSH_SUBSCRIPTION_TYPE_WEB = 1;
+  PUSH_SUBSCRIPTION_TYPE_EXPO = 2;
+}
+
+message CreatePushSubscriptionRequest{
+  string endpoint = 1;
+  string p256dh = 2;
+  string auth = 3;
+  PushSubscriptionType type = 4;
+  string token = 5;
+  string expiration_time = 6;
+}
+
+// ------------------ Responses ------------------ //
+
+message GetPublicKeyResponse{
+  string public_key = 1;
+}
+
+message CreatePushSubscriptionResponse{
+  string subscription_id = 1;
+}

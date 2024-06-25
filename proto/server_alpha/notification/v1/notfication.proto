@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package server_alpha.notification.v1;
+
+import "server_alpha/user/v1/user.proto";
+
+// ------------------ Services ------------------ //
+
+service NotificationService{
+  rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse);
+  rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationResponse);
+  rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse);
+}
+
+// --------------- Domain Objects --------------- //
+
+enum NotificationType {
+  NOTIFICATION_TYPE_UNSPECIFIED = 0;
+  NOTIFICATION_TYPE_FOLLOW = 1;
+  NOTIFICATION_TYPE_REPOST = 2;
+}
+
+message Notification{
+  string notification_id = 1;
+  string timestamp = 2;
+  NotificationType notification_type = 3;
+  user.v1.User user = 4;
+}
+
+// ------------------ Requests ------------------ //
+
+message ListNotificationsRequest{}
+
+message DeleteNotificationRequest{
+  string notification_id = 1;
+}
+
+message SendNotificationRequest{
+  string notification_type = 1;
+  string sender = 2;
+}
+
+// ------------------ Responses ------------------ //
+
+message ListNotificationsResponse{
+  repeated Notification notifications = 1;
+}
+
+message DeleteNotificationResponse{}
+
+message SendNotificationResponse{}

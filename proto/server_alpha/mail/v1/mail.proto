@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package server_alpha.mail.v1;
+
+// ------------------ Services ------------------ //
+
+service MailService {
+  rpc SendTokenMail(SendTokenMailRequest) returns (SendTokenMailResponse);
+  rpc SendConfirmationMail(SendConfirmationMailRequest) returns (SendConfirmationMailResponse);
+}
+
+// ------------------ Enums ------------------ //
+
+enum TokenMailType {
+  TOKEN_MAIL_TYPE_UNSPECIFIED = 0;
+  TOKEN_MAIL_TYPE_REGISTRATION = 1;
+  TOKEN_MAIL_TYPE_PASSWORD_RESET = 2;
+}
+
+// --------------- Domain Objects --------------- //
+
+message UserInformation {
+  string username = 1;
+  string email = 2;
+}
+
+// ------------------ Requests ------------------ //
+
+message SendTokenMailRequest {
+  UserInformation user = 1;
+  string token = 2;
+  TokenMailType type = 3;
+}
+
+message SendConfirmationMailRequest {
+  UserInformation user = 1;
+}
+
+// ------------------ Responses ------------------ //
+
+message SendTokenMailResponse {}
+
+message SendConfirmationMailResponse {}

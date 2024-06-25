@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package server_alpha.post.v1;
+
+import "server_alpha/common/v1/common.proto";
+import "server_alpha/image/v1/image.proto";
+import "server_alpha/user/v1/user.proto";
+
+// ------------------ Services ------------------ //
+
+service PostService {
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
+  rpc GetPost(GetPostRequest) returns (GetPostResponse);
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
+}
+
+// --------------- Domain Objects --------------- //
+
+message Location {
+  optional float latitude = 1;
+  optional float longitude = 2;
+  optional int32 accuracy = 3;
+}
+
+message Post {
+  string post_id = 1;
+  user.v1.User author = 2;
+  string creation_date = 3;
+  string content = 4;
+  uint32 likes = 5;
+  bool liked = 6;
+  optional Post repost = 7;
+  optional Location location = 8;
+  optional image.v1.Picture picture = 9;
+}
+
+// ------------ Request messages ------------ //
+
+message CreatePostRequest {
+  string content = 1;
+  optional Location location = 2;
+  optional string picture = 3;
+  optional string reposted_post_id = 4;
+  optional string base64_picture = 5;
+}
+
+enum FeedType {
+  FEED_TYPE_UNSPECIFIED = 0;
+  FEED_TYPE_GLOBAL = 1;
+  FEED_TYPE_PERSONAL = 2;
+  FEED_TYPE_USER = 3;
+}
+
+message ListPostsRequest {
+  optional string hashtag = 1;
+  optional string username = 2;
+  FeedType feed_type = 3;
+  common.v1.PaginationRequest pagination = 4;
+}
+
+message GetPostRequest {
+  string post_id = 1;
+}
+
+message DeletePostRequest {
+  string post_id = 1;
+}
+
+// ------------ Response messages ------------ //
+
+message ListPostsResponse {
+  repeated Post posts = 1;
+  common.v1.PaginationResponse pagination = 2;
+}
+
+message CreatePostResponse {
+  string post_id = 1;
+  user.v1.User author = 2;
+  string creation_date = 3;
+  string content = 4;
+  uint32 likes = 5;
+  bool liked = 6;
+  optional Post repost = 7;
+  optional Location location = 8;
+  optional image.v1.Picture picture = 9;
+}
+
+message GetPostResponse {
+  string post_id = 1;
+  user.v1.User author = 2;
+  string creation_date = 3;
+  string content = 4;
+  uint32 likes = 5;
+  bool liked = 6;
+  optional Post repost = 7;
+  optional Location location = 8;
+  optional image.v1.Picture picture = 9;
+}
+
+message DeletePostResponse {}

@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package server_alpha.health.v1;
+
+// ------------------ Services ------------------ //
+
+service HealthService {
+  rpc Check(CheckRequest) returns (CheckResponse) {}
+  rpc Watch(WatchRequest) returns (stream WatchResponse) {}
+}
+
+// ------------------ Requests ------------------ //
+
+message CheckRequest {
+  string service = 1;
+}
+
+message WatchRequest {
+  string service = 1;
+}
+
+// ------------------ Responses ------------------ //
+
+enum ServingStatus {
+  SERVING_STATUS_UNSPECIFIED = 0;
+  SERVING_STATUS_UNKNOWN = 1;
+  SERVING_STATUS_SERVING = 2;
+  SERVING_STATUS_NOT_SERVING = 3;
+  SERVING_STATUS_SERVICE_UNKNOWN = 4;
+}
+
+message CheckResponse {
+  ServingStatus status = 1;
+}
+
+message WatchResponse {
+  ServingStatus status = 1;
+}
