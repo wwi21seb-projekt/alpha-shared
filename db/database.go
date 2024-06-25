@@ -6,19 +6,18 @@ import (
 	"fmt"
 	"github.com/exaring/otelpgx"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/wwi21seb-projekt/alpha-shared/config"
-
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type DB struct {
-	Pool *pgxpool.Pool
+	pool   *pgxpool.Pool
+	logger *zap.SugaredLogger
 }
 
-type TxFunc func(tx pgx.Tx) error
-
-func NewDB(ctx context.Context, dbCfg config.DatabaseConfig) (*DB, error) {
+func NewDB(ctx context.Context, dbCfg config.DatabaseConfig, logger *zap.SugaredLogger) (*DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=disable search_path=%s",
 		dbCfg.PostgresHost, dbCfg.PostgresPort, dbCfg.PostgresDB, dbCfg.PostgresUser, dbCfg.PostgresPassword, dbCfg.SchemaName)
 
@@ -34,41 +33,64 @@ func NewDB(ctx context.Context, dbCfg config.DatabaseConfig) (*DB, error) {
 		return nil, err
 	}
 
-	return &DB{Pool: pool}, nil
+	return &DB{pool: pool, logger: logger}, nil
 }
 
 func (db *DB) Close() {
-	db.Pool.Close()
+	db.pool.Close()
 }
 
 func (db *DB) Ping(ctx context.Context) error {
-	return db.Pool.Ping(ctx)
+	return db.pool.Ping(ctx)
 }
 
-// ----------------- Transaction Functions -----------------
+// ----------------- Connection and Transaction Management -----------------
 
-// Begin starts a new transaction and returns a transaction object
-func (db *DB) Begin(ctx context.Context) (pgx.Tx, error) {
-	log.Info("Beginning new transaction...")
-	return db.Pool.Begin(ctx)
-}
-
-// Commit commits the transaction
-func (db *DB) Commit(ctx context.Context, tx pgx.Tx) error {
-	log.Info("Committing transaction...")
-	return tx.Commit(ctx)
-}
-
-// Rollback rolls back the transaction
-func (db *DB) Rollback(ctx context.Context, tx pgx.Tx) error {
-	err := tx.Rollback(ctx)
-
-	// Ignore the error if the transaction was already committed
-	if err != nil && errors.Is(err, pgx.ErrTxClosed) {
-		return nil
+func (db *DB) Acquire(ctx context.Context) (*pgxpool.Conn, error) {
+	db.logger.Debug("Acquiring connection from pool...")
+	conn, err := db.pool.Acquire(ctx)
+	if err != nil {
+		db.logger.Errorw("Failed to acquire connection from pool", "error", err)
+		return nil, err
 	}
+	return conn, nil
+}
 
-	// Log late, so the consumer doesn't get a log for noops (when the transaction was already committed)
-	log.Info("Rolling back transaction...")
-	return err
+func (db *DB) BeginTx(ctx context.Context, conn *pgxpool.Conn) (pgx.Tx, error) {
+	db.logger.Debug("Starting transaction...")
+	tx, err := conn.Begin(ctx)
+	if err != nil {
+		db.logger.Errorw("Failed to start transaction", "error", err)
+		conn.Release()
+		return nil, err
+	}
+	return tx, nil
+}
+
+func (db *DB) CommitTx(ctx context.Context, tx pgx.Tx) error {
+	db.logger.Debug("Committing transaction...")
+	err := tx.Commit(ctx)
+	if err != nil {
+		db.logger.Errorw("Failed to commit transaction", "error", err)
+		return HandlePGError(err, db.logger, "CommitTx")
+	}
+	return nil
+}
+
+func (db *DB) RollbackTx(ctx context.Context, tx pgx.Tx) error {
+	err := tx.Rollback(ctx)
+	if err != nil && !errors.Is(err, pgx.ErrTxClosed) {
+		db.logger.Errorw("Failed to rollback transaction", "error", err)
+		return err
+	}
+	db.logger.Debug("Rolled back transaction")
+	return nil
+}
+
+func (db *DB) Exec(ctx context.Context, conn *pgxpool.Conn, query string, args ...interface{}) (pgconn.CommandTag, error) {
+	tag, err := conn.Exec(ctx, query, args...)
+	if err != nil {
+		return tag, HandlePGError(err, db.logger, "Exec")
+	}
+	return tag, nil
 }
