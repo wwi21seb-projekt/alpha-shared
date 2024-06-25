@@ -10,6 +10,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/wwi21seb-projekt/alpha-shared/config"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"os"
 )
 
 type DB struct {
@@ -23,14 +26,18 @@ func NewDB(ctx context.Context, dbCfg config.DatabaseConfig, logger *zap.Sugared
 
 	cfg, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse database config: %w", err)
 	}
 
-	cfg.ConnConfig.Tracer = otelpgx.NewTracer(otelpgx.WithTrimSQLInSpanName())
+	options := []otelpgx.Option{otelpgx.WithIncludeQueryParameters(), otelpgx.WithTrimSQLInSpanName()}
+	if os.Getenv("ENVIRONMENT") == "development" {
+		options = append(options, otelpgx.WithAttributes()) // Include query attributes in spans
+	}
+	cfg.ConnConfig.Tracer = otelpgx.NewTracer(options...)
 
 	pool, err := pgxpool.NewWithConfig(ctx, cfg)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create connection pool: %w", err)
 	}
 
 	return &DB{pool: pool, logger: logger}, nil
@@ -51,7 +58,7 @@ func (db *DB) Acquire(ctx context.Context) (*pgxpool.Conn, error) {
 	conn, err := db.pool.Acquire(ctx)
 	if err != nil {
 		db.logger.Errorw("Failed to acquire connection from pool", "error", err)
-		return nil, err
+		return nil, status.Error(codes.Internal, "failed to acquire connection")
 	}
 	return conn, nil
 }
@@ -62,7 +69,7 @@ func (db *DB) BeginTx(ctx context.Context, conn *pgxpool.Conn) (pgx.Tx, error) {
 	if err != nil {
 		db.logger.Errorw("Failed to start transaction", "error", err)
 		conn.Release()
-		return nil, err
+		return nil, status.Error(codes.Internal, "failed to acquire connection")
 	}
 	return tx, nil
 }
@@ -71,17 +78,16 @@ func (db *DB) CommitTx(ctx context.Context, tx pgx.Tx) error {
 	db.logger.Debug("Committing transaction...")
 	err := tx.Commit(ctx)
 	if err != nil {
-		db.logger.Errorw("Failed to commit transaction", "error", err)
 		return HandlePGError(err, db.logger, "CommitTx")
 	}
+	db.logger.Debug("Committed transaction")
 	return nil
 }
 
 func (db *DB) RollbackTx(ctx context.Context, tx pgx.Tx) error {
 	err := tx.Rollback(ctx)
 	if err != nil && !errors.Is(err, pgx.ErrTxClosed) {
-		db.logger.Errorw("Failed to rollback transaction", "error", err)
-		return err
+		return HandlePGError(err, db.logger, "RollbackTx")
 	}
 	db.logger.Debug("Rolled back transaction")
 	return nil
