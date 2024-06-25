@@ -20,7 +20,6 @@ const _ = grpc.SupportPackageIsVersion8
 
 const (
 	PostService_ListPosts_FullMethodName  = "/server_alpha.post.v1.PostService/ListPosts"
-	PostService_GetPost_FullMethodName    = "/server_alpha.post.v1.PostService/GetPost"
 	PostService_CreatePost_FullMethodName = "/server_alpha.post.v1.PostService/CreatePost"
 	PostService_DeletePost_FullMethodName = "/server_alpha.post.v1.PostService/DeletePost"
 )
@@ -30,7 +29,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PostServiceClient interface {
 	ListPosts(ctx context.Context, in *ListPostsRequest, opts ...grpc.CallOption) (*ListPostsResponse, error)
-	GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetPostResponse, error)
 	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostResponse, error)
 	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
 }
@@ -47,16 +45,6 @@ func (c *postServiceClient) ListPosts(ctx context.Context, in *ListPostsRequest,
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListPostsResponse)
 	err := c.cc.Invoke(ctx, PostService_ListPosts_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *postServiceClient) GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetPostResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetPostResponse)
-	err := c.cc.Invoke(ctx, PostService_GetPost_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +76,6 @@ func (c *postServiceClient) DeletePost(ctx context.Context, in *DeletePostReques
 // for forward compatibility
 type PostServiceServer interface {
 	ListPosts(context.Context, *ListPostsRequest) (*ListPostsResponse, error)
-	GetPost(context.Context, *GetPostRequest) (*GetPostResponse, error)
 	CreatePost(context.Context, *CreatePostRequest) (*CreatePostResponse, error)
 	DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error)
 	mustEmbedUnimplementedPostServiceServer()
@@ -100,9 +87,6 @@ type UnimplementedPostServiceServer struct {
 
 func (UnimplementedPostServiceServer) ListPosts(context.Context, *ListPostsRequest) (*ListPostsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPosts not implemented")
-}
-func (UnimplementedPostServiceServer) GetPost(context.Context, *GetPostRequest) (*GetPostResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPost not implemented")
 }
 func (UnimplementedPostServiceServer) CreatePost(context.Context, *CreatePostRequest) (*CreatePostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePost not implemented")
@@ -137,24 +121,6 @@ func _PostService_ListPosts_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PostServiceServer).ListPosts(ctx, req.(*ListPostsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PostService_GetPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPostRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PostServiceServer).GetPost(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PostService_GetPost_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PostServiceServer).GetPost(ctx, req.(*GetPostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -205,10 +171,6 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPosts",
 			Handler:    _PostService_ListPosts_Handler,
-		},
-		{
-			MethodName: "GetPost",
-			Handler:    _PostService_GetPost_Handler,
 		},
 		{
 			MethodName: "CreatePost",

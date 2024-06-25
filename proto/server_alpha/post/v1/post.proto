@@ -10,7 +10,6 @@ import "server_alpha/user/v1/user.proto";
 
 service PostService {
   rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
-  rpc GetPost(GetPostRequest) returns (GetPostResponse);
   rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
   rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
 }
@@ -18,9 +17,9 @@ service PostService {
 // --------------- Domain Objects --------------- //
 
 message Location {
-  optional float latitude = 1;
-  optional float longitude = 2;
-  optional int32 accuracy = 3;
+  float latitude = 1;
+  float longitude = 2;
+  int32 accuracy = 3;
 }
 
 message Post {
@@ -42,7 +41,6 @@ message CreatePostRequest {
   optional Location location = 2;
   optional string picture = 3;
   optional string reposted_post_id = 4;
-  optional string base64_picture = 5;
 }
 
 enum FeedType {
@@ -57,10 +55,7 @@ message ListPostsRequest {
   optional string username = 2;
   FeedType feed_type = 3;
   common.v1.PaginationRequest pagination = 4;
-}
-
-message GetPostRequest {
-  string post_id = 1;
+  repeated string post_ids = 5;
 }
 
 message DeletePostRequest {
@@ -75,18 +70,6 @@ message ListPostsResponse {
 }
 
 message CreatePostResponse {
-  string post_id = 1;
-  user.v1.User author = 2;
-  string creation_date = 3;
-  string content = 4;
-  uint32 likes = 5;
-  bool liked = 6;
-  optional Post repost = 7;
-  optional Location location = 8;
-  optional image.v1.Picture picture = 9;
-}
-
-message GetPostResponse {
   string post_id = 1;
   user.v1.User author = 2;
   string creation_date = 3;
