@@ -32,6 +32,7 @@ message Post {
   optional Post repost = 7;
   optional Location location = 8;
   optional image.v1.Picture picture = 9;
+  uint32 comments = 10;
 }
 
 // ------------ Request messages ------------ //

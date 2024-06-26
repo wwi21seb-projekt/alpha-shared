@@ -3,7 +3,7 @@ module github.com/wwi21seb-projekt/alpha-shared
 go 1.22.3
 
 require (
-	github.com/exaring/otelpgx v0.6.1
+	github.com/exaring/otelpgx v0.6.2
 	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438
 	github.com/jackc/pgx/v5 v5.6.0
 	go.opentelemetry.io/otel v1.27.0
