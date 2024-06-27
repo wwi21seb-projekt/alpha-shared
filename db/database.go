@@ -29,6 +29,8 @@ func NewDB(ctx context.Context, dbCfg config.DatabaseConfig, logger *zap.Sugared
 		return nil, fmt.Errorf("failed to parse database config: %w", err)
 	}
 
+	cfg.MaxConns = 20
+
 	options := []otelpgx.Option{otelpgx.WithIncludeQueryParameters(), otelpgx.WithTrimSQLInSpanName()}
 	if os.Getenv("ENVIRONMENT") == "development" {
 		options = append(options, otelpgx.WithAttributes()) // Include query attributes in spans
