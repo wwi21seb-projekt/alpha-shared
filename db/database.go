@@ -31,9 +31,9 @@ func NewDB(ctx context.Context, dbCfg config.DatabaseConfig, logger *zap.Sugared
 
 	cfg.MaxConns = 20
 
-	options := []otelpgx.Option{otelpgx.WithIncludeQueryParameters(), otelpgx.WithTrimSQLInSpanName()}
+	options := []otelpgx.Option{otelpgx.WithTrimSQLInSpanName()}
 	if os.Getenv("ENVIRONMENT") == "development" {
-		options = append(options, otelpgx.WithAttributes()) // Include query attributes in spans
+		options = append(options, otelpgx.WithAttributes(), otelpgx.WithIncludeQueryParameters()) // Include query attributes in spans
 	}
 	cfg.ConnConfig.Tracer = otelpgx.NewTracer(options...)
 
