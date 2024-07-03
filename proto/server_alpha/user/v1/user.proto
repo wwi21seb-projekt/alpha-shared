@@ -20,7 +20,7 @@ service UserService {
 message User {
   string username = 1;
   string nickname = 2;
-  image.v1.Picture picture = 4;
+  image.v1.Picture picture = 3;
 }
 
 // ------------------ Requests ------------------ //
@@ -42,7 +42,7 @@ message UpdateUserRequest {
   string nickname = 1;
   string status = 2;
   optional string base64_picture = 3; // if the user wants to update the picture, the base64_picture field must be set
-  // if it's not set, the picture will be deleted. if it's set to an empty string, the picture will not be changed
+  // if it's not set, it's an no-op. if it's set to an empty string, the picture will be changed to the default one
 }
 
 // ------------------ Responses ------------------ //
@@ -61,6 +61,7 @@ message GetUserResponse {
 message UpdateUserResponse {
   string nickname = 1;
   string status = 2;
+  image.v1.Picture picture = 3;
 }
 
 message SearchUsersResponse {

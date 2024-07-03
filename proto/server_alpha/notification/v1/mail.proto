@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package server_alpha.mail.v1;
+package server_alpha.notification.v1;
 
 // ------------------ Services ------------------ //
 

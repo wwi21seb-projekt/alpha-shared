@@ -32,7 +32,6 @@ type DatabaseConfig struct {
 type ServiceEndpoints struct {
 	UserServiceURL         string
 	PostServiceURL         string
-	MailServiceURL         string
 	NotificationServiceURL string
 	ChatServiceURL         string
 	ImageServiceURL        string
@@ -46,7 +45,6 @@ type JaegerConfig struct {
 type GRPCClients struct {
 	UserService         grpc.ClientConnInterface
 	PostService         grpc.ClientConnInterface
-	MailService         grpc.ClientConnInterface
 	NotificationService grpc.ClientConnInterface
 	ChatService         grpc.ClientConnInterface
 	ImageService        grpc.ClientConnInterface
@@ -68,7 +66,6 @@ func LoadConfig() (*AlphaConfig, error) {
 			// initialize the clients if the URLs are not provided.
 			UserServiceURL:         getEnv("USER_SERVICE_URL", ""),
 			PostServiceURL:         getEnv("POST_SERVICE_URL", ""),
-			MailServiceURL:         getEnv("MAIL_SERVICE_URL", ""),
 			NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", ""),
 			ChatServiceURL:         getEnv("CHAT_SERVICE_URL", ""),
 			ImageServiceURL:        getEnv("IMAGE_SERVICE_URL", ""),
@@ -109,9 +106,6 @@ func (cfg *AlphaConfig) InitializeClients(logger *zap.Logger) error {
 		return err
 	}
 	if cfg.GRPCClients.PostService, err = initializeClient(cfg.ServiceEndpoints.PostServiceURL, dialOpts); err != nil {
-		return err
-	}
-	if cfg.GRPCClients.MailService, err = initializeClient(cfg.ServiceEndpoints.MailServiceURL, dialOpts); err != nil {
 		return err
 	}
 	if cfg.GRPCClients.NotificationService, err = initializeClient(cfg.ServiceEndpoints.NotificationServiceURL, dialOpts); err != nil {
