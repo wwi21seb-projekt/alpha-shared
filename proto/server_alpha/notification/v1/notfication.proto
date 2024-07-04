@@ -18,6 +18,7 @@ enum NotificationType {
   NOTIFICATION_TYPE_UNSPECIFIED = 0;
   NOTIFICATION_TYPE_FOLLOW = 1;
   NOTIFICATION_TYPE_REPOST = 2;
+  NOTIFICATION_TYPE_CHAT = 3;
 }
 
 message Notification{
@@ -37,7 +38,7 @@ message DeleteNotificationRequest{
 
 message SendNotificationRequest{
   string notification_type = 1;
-  string sender = 2;
+  string recipient = 2;
 }
 
 // ------------------ Responses ------------------ //
