@@ -1,6 +1,8 @@
 package grpc
 
 import (
+	"time"
+
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/timeout"
 	sharedLogging "github.com/wwi21seb-projekt/alpha-shared/logging"
@@ -8,13 +10,16 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"time"
 )
 
 // NewClientOptions returns a list of grpc.DialOptions for a client
 func NewClientOptions(logger *zap.Logger) []grpc.DialOption {
 	return []grpc.DialOption{
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
+		grpc.WithDefaultCallOptions(
+			grpc.MaxCallRecvMsgSize(1024*1024*5), 
+			grpc.MaxCallSendMsgSize(1024*1024*5),
+		), // Set maximum message size to 5 MB
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithChainUnaryInterceptor(
 			timeout.UnaryClientInterceptor(3*time.Second),

@@ -13,8 +13,8 @@ import (
 func NewServerOptions(logger *zap.Logger) []grpc.ServerOption {
 	return []grpc.ServerOption{
 		grpc.StatsHandler(otelgrpc.NewServerHandler()), // Intercepts gRPC calls for telemetry
-		grpc.MaxRecvMsgSize(1024*5),					// Set maximum message size to 5 MB
-		grpc.ChainUnaryInterceptor( // Chain multiple unary interceptors
+		grpc.MaxRecvMsgSize(1024*1024*5),				// Set maximum message size to 5 MB
+		grpc.ChainUnaryInterceptor( 					// Chain multiple unary interceptors
 			logging.UnaryServerInterceptor(sharedLogging.InterceptorLogger(logger), loggingOptions()...),    // Logging interceptor
 			recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler(logger))), // Recovery interceptor
 		),
