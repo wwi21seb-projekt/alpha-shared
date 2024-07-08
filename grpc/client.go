@@ -17,9 +17,9 @@ func NewClientOptions(logger *zap.Logger) []grpc.DialOption {
 	return []grpc.DialOption{
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 		grpc.WithDefaultCallOptions(
-			grpc.MaxCallRecvMsgSize(1024*1024*5), 
-			grpc.MaxCallSendMsgSize(1024*1024*5),
-		), // Set maximum message size to 5 MB
+			grpc.MaxCallRecvMsgSize(1024*1024*15), 
+			grpc.MaxCallSendMsgSize(1024*1024*15),
+		), // Set maximum message size to 15 MB
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithChainUnaryInterceptor(
 			timeout.UnaryClientInterceptor(3*time.Second),
